@@ -1,0 +1,109 @@
+<resources>
+    <!-- Editor de identidad de equipo -->
+    <string name="identity_edit_title">Personalizar equipo</string>
+    <string name="identity_edit_subtitle">Identidad visual con vista previa en tiempo real.</string>
+    <string name="identity_preview_label">Vista previa</string>
+    <string name="identity_customize">Personalizar equipo</string>
+    <string name="identity_save">Guardar cambios</string>
+    <string name="identity_cancel">Cancelar</string>
+    <string name="identity_reset">Restablecer</string>
+    <string name="identity_saved">Identidad del equipo guardada.</string>
+    <string name="identity_discarded">Cambios descartados.</string>
+    <string name="identity_reset_done">Se restauró la identidad guardada.</string>
+    <string name="identity_description">Descripción</string>
+    <string name="identity_motto">Lema del equipo</string>
+
+    <!-- Opción A: crear el logo dentro de Teamval -->
+    <string name="logo_editor_title">Editor de logo</string>
+    <string name="logo_editor_subtitle">Crea un logo original o usa una imagen tuya.</string>
+    <string name="logo_option_create">Crear logo</string>
+    <string name="logo_option_upload">Subir imagen</string>
+    <string name="logo_symbol">Símbolo y forma</string>
+    <string name="logo_initials">Iniciales o abreviatura</string>
+    <string name="logo_initials_hint">Hasta 4 caracteres. Déjalo vacío para omitirlos.</string>
+    <string name="logo_gradient">Degradado</string>
+    <string name="logo_primary_color">Color principal</string>
+    <string name="logo_secondary_color">Color secundario</string>
+    <string name="logo_background">Fondo</string>
+    <string name="logo_frame">Marco</string>
+    <string name="logo_shape">Formato</string>
+    <string name="logo_scale">Tamaño del símbolo</string>
+    <string name="logo_preview">Vista previa del logo</string>
+    <string name="logo_summary">%1$s · %2$s</string>
+    <string name="logo_save">Guardar logo</string>
+    <string name="logo_saved">Logo guardado en la identidad del equipo.</string>
+    <string name="option_none">Ninguno</string>
+    <string name="option_linear">Lineal</string>
+    <string name="option_radial">Radial</string>
+    <string name="frame_solid">Sólido</string>
+    <string name="frame_glow">Brillo</string>
+    <string name="logo_frame_double">Doble</string>
+    <string name="shape_circle">Circular</string>
+    <string name="shape_square">Cuadrado</string>
+    <string name="symbol_star">Estrella</string>
+    <string name="symbol_bolt">Rayo</string>
+    <string name="symbol_hexagon">Hexágono</string>
+    <string name="symbol_shield">Escudo</string>
+    <string name="symbol_diamond">Diamante</string>
+    <string name="symbol_triangle">Triángulo</string>
+    <string name="symbol_crosshair">Mira</string>
+    <string name="symbol_orbit">Órbita</string>
+
+    <!-- Opción B: subir imagen con Photo Picker -->
+    <string name="image_pick">Elegir imagen de la galería</string>
+    <string name="image_remove">Quitar imagen y volver al logo creado</string>
+    <string name="image_status_ok">Cumple las recomendaciones</string>
+    <string name="image_status_low">Por debajo de 512 × 512</string>
+    <string name="image_rules_title">Recomendaciones de imagen</string>
+    <string name="image_rules_body">JPG, PNG o WebP · Proporción 1:1 · 512 × 512 px o superior. Recortamos proporcionalmente dentro del marco y nunca deformamos la imagen.</string>
+    <string name="image_current">Imagen actual: %1$s</string>
+    <string name="image_pick_error_format">Formato no admitido. Usa JPG, PNG o WebP.</string>
+    <string name="image_pick_error_size">La imagen supera los 10 MB.</string>
+    <string name="image_pick_error_empty">No se pudo leer la imagen seleccionada.</string>
+    <string name="image_pick_error_decode">La imagen no se pudo abrir en este dispositivo.</string>
+    <string name="image_crop_title">Ajustar imagen</string>
+    <string name="image_crop_subtitle">Arrastra y amplía hasta encajar en el marco.</string>
+    <string name="image_crop_hint">Previsualización circular y cuadrada con recorte proporcional.</string>
+    <string name="image_crop_apply">Usar esta imagen</string>
+    <string name="image_crop_reset">Centrar</string>
+    <string name="image_preview_square">Cuadrada</string>
+    <string name="image_preview_circle">Circular</string>
+    <string name="image_moderation_note">Demo · Solo validamos formato y tamaño. La revisión de contenido, las denuncias y la moderación llegarán con el backend de Teamval.</string>
+    <string name="image_size_note">%1$d × %2$d px · %3$s</string>
+
+    <!-- Personalización del perfil del equipo -->
+    <string name="identity_banner">Banner</string>
+    <string name="identity_background">Fondo del perfil</string>
+    <string name="identity_frame">Marco del perfil</string>
+    <string name="identity_badges">Insignias decorativas</string>
+    <string name="identity_layout">Distribución de secciones</string>
+    <string name="identity_member_style">Presentación de integrantes</string>
+    <string name="identity_colors">Colores del equipo</string>
+    <string name="identity_badges_hint">Elige hasta 3 insignias decorativas.</string>
+    <string name="identity_members_preview">Integrantes de ejemplo</string>
+    <string name="banner_solid">Sólido</string>
+    <string name="banner_gradient">Degradado</string>
+    <string name="banner_aurora">Aurora</string>
+    <string name="banner_grid">Cuadrícula</string>
+    <string name="banner_graphite">Grafito</string>
+    <string name="background_plain">Liso</string>
+    <string name="background_dusk">Crepúsculo</string>
+    <string name="background_aurora">Aurora</string>
+    <string name="background_grid">Cuadrícula</string>
+    <string name="frame_ring">Anillo</string>
+    <string name="frame_gradient">Degradado</string>
+    <string name="layout_standard">Estándar</string>
+    <string name="layout_compact">Compacto</string>
+    <string name="layout_spotlight">Destacar integrantes</string>
+    <string name="member_grid">Cuadrícula</string>
+    <string name="member_list">Lista</string>
+    <string name="member_cards">Tarjetas</string>
+
+    <!-- Insignias compartidas (decorativas y de reputación) -->
+    <string name="badge_fair_play">Juego limpio</string>
+    <string name="badge_punctual">Puntuales</string>
+    <string name="badge_communicative">Buena comunicación</string>
+    <string name="badge_veteran">Veteranos</string>
+    <string name="badge_rising">En ascenso</string>
+    <string name="badge_organized">Organizado</string>
+</resources>

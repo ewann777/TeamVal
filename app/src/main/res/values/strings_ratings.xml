@@ -1,0 +1,62 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Pantalla de valoración -->
+    <string name="rating_title">Valorar a %1$s</string>
+    <string name="rating_subtitle">Conducta, profesionalismo y respeto; no el nivel de juego.</string>
+    <string name="rating_rules_note">Solo se valora tras una scrim completada y confirmada. Una valoración por enfrentamiento, emitida por el capitán. Sin monedas por valoraciones positivas y sin penalizaciones por perder.</string>
+    <string name="rating_respect">Respeto</string>
+    <string name="rating_respect_hint">¿Trataron correctamente al equipo rival?</string>
+    <string name="rating_seriousness">Seriedad</string>
+    <string name="rating_seriousness_hint">¿Se tomaron el enfrentamiento y los acuerdos en serio?</string>
+    <string name="rating_punctuality">Puntualidad</string>
+    <string name="rating_punctuality_hint">¿Cumplieron con el horario?</string>
+    <string name="rating_communication">Comunicación</string>
+    <string name="rating_communication_hint">¿Fue fácil coordinarse con ellos?</string>
+    <string name="rating_sportsmanship">Deportividad</string>
+    <string name="rating_sportsmanship_hint">¿Mostraron una actitud deportiva durante el enfrentamiento?</string>
+    <string name="rating_comment">Comentario breve (opcional)</string>
+    <string name="rating_comment_hint">%1$d/500 · Debe cumplir las normas comunitarias de la demo.</string>
+    <string name="rating_comment_too_short">El comentario debe tener al menos 10 caracteres.</string>
+    <string name="rating_comment_too_long">El comentario no puede superar los 500 caracteres.</string>
+    <string name="rating_comment_link">No se permiten enlaces en los comentarios.</string>
+    <string name="rating_comment_blocked">El comentario contiene términos que no cumplen las normas comunitarias.</string>
+    <string name="rating_submit">Enviar valoración</string>
+    <string name="rating_sent_title">Valoración enviada</string>
+    <string name="rating_sent_body">Tu equipo ya valoró a %1$s. Solo se admite una valoración por enfrentamiento.</string>
+    <string name="rating_sent_action">Volver al detalle de la scrim</string>
+    <string name="rating_star_content" tools:ignore="PluralsCandidate">%1$s: %2$d estrellas</string>
+    <string name="rating_value_short">%1$d/5</string>
+    <string name="rating_already_sent">Ya valoraste a este equipo en esta scrim.</string>
+    <string name="rating_error_generic">No se pudo enviar la valoración.</string>
+    <string name="rating_block_no_team">Primero crea tu propio equipo.</string>
+    <string name="rating_block_no_scrim">Esta scrim ya no existe.</string>
+    <string name="rating_block_not_completed">Solo se valora después de una scrim completada y confirmada.</string>
+    <string name="rating_block_not_participant">Solo los equipos participantes pueden valorar.</string>
+    <string name="rating_block_own_team">No puedes valorar a tu propio equipo.</string>
+    <string name="rating_block_already">Tu equipo ya emitió su valoración para este enfrentamiento.</string>
+    <string name="rating_block_invalid_scores">Asigna de 1 a 5 estrellas en las cinco categorías.</string>
+    <string name="scrim_rate_action">Valorar al equipo rival</string>
+
+    <!-- Reputación en el perfil del equipo -->
+    <string name="reputation_team_title">Reputación del equipo</string>
+    <string name="reputation_overall">%1$s/5 estrellas</string>
+    <plurals name="reputation_count">
+        <item quantity="one">%1$d valoración</item>
+        <item quantity="other">%1$d valoraciones</item>
+    </plurals>
+    <string name="reputation_category">%1$s · %2$s/5</string>
+    <string name="reputation_empty">Este equipo aún no tiene valoraciones.</string>
+    <string name="reputation_badges">Insignias de reputación</string>
+    <string name="reputation_recent">Comentarios recientes</string>
+    <string name="reputation_report">Denunciar comentario</string>
+    <string name="reputation_reported">Comentario denunciado. La revisión llegará con la moderación de Teamval.</string>
+    <string name="reputation_report_done">Comentario denunciado correctamente.</string>
+    <string name="reputation_demo_note">Demo · Valoraciones ficticias guardadas en el dispositivo. La moderación y las apelaciones llegarán con el backend.</string>
+    <string name="scrim_history_title">Historial de scrims</string>
+    <string name="scrim_history_empty">Este equipo aún no tiene scrims registrados.</string>
+    <plurals name="scrim_history_count">
+        <item quantity="one">%1$d scrim registrada</item>
+        <item quantity="other">%1$d scrims registradas</item>
+    </plurals>
+    <string name="badge_trusted">Equipo de confianza</string>
+    <string name="badge_active">Equipo activo</string>
+</resources>

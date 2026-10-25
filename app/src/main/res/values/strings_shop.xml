@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Etapa 5: tienda, monedas, recompensas e inventario -->
+
+    <!-- Navegación y encabezados -->
+    <string name="shop_title">Tienda</string>
+    <string name="shop_subtitle">Cosméticos premium para tu perfil y tu equipo. Solo estética: nunca dan ventajas competitivas.</string>
+    <string name="inventory_title">Inventario</string>
+    <string name="inventory_subtitle">Tus cosméticos adquiridos y su estado.</string>
+    <string name="wallet_title">Monedero</string>
+    <string name="wallet_subtitle">Saldo, movimientos y recompensas de Timbal Coins.</string>
+    <string name="rewards_title">Recompensas</string>
+    <string name="rewards_subtitle">Misiones gratuitas con monedas ficticias.</string>
+    <string name="coin_name">Timbal Coins</string>
+
+    <!-- Monedero -->
+    <string name="wallet_balance">Saldo actual</string>
+    <string name="wallet_earned">Monedas obtenidas</string>
+    <string name="wallet_spent">Monedas gastadas</string>
+    <string name="wallet_history">Historial de movimientos</string>
+    <string name="wallet_empty">Todavía no hay movimientos en tu monedero.</string>
+    <string name="wallet_received">Recompensas recibidas</string>
+    <string name="wallet_received_empty">Aún no has recibido recompensas.</string>
+    <string name="wallet_disclaimer">Las Timbal Coins son ficticias: sin valor real, no transferibles y sin conversión a dinero.</string>
+    <string name="wallet_open">Monedero</string>
+
+    <!-- Tienda -->
+    <string name="shop_balance">Tu saldo</string>
+    <string name="shop_open_inventory">Inventario</string>
+    <string name="shop_open_rewards">Recompensas</string>
+    <string name="shop_featured">Destacados</string>
+    <string name="shop_categories">Categorías</string>
+    <string name="shop_all">Todo</string>
+    <string name="shop_buy">Comprar</string>
+    <string name="shop_equip">Equipar</string>
+    <string name="shop_unequip">Desequipar</string>
+    <string name="shop_details">Ver detalles</string>
+    <string name="shop_close">Cerrar</string>
+    <string name="shop_confirm_title">Confirmar compra</string>
+    <string name="shop_confirm_message" formatted="true" tools:ignore="PluralsCandidate">¿Comprar %1$s por %2$d Timbal Coins?</string>
+    <string name="shop_confirm_action">Comprar ahora</string>
+    <string name="shop_no_items">No hay artículos en esta categoría.</string>
+    <string name="shop_contains" formatted="true">Incluye: %1$s</string>
+    <string name="shop_bundle">Paquete</string>
+    <string name="shop_team_item">Cosmético de equipo</string>
+    <string name="shop_personal_item">Cosmético personal</string>
+    <string name="shop_unlocked">¡%1$s desbloqueado!</string>
+    <string name="shop_premium">Próximamente</string>
+    <string name="shop_premium_hint">Los artículos premium se comprarán con dinero real en el futuro. Esta etapa no realiza pagos reales ni simula compras.</string>
+    <string name="shop_no_lock_loot">Sin cajas de botín, apuestas ni ventajas competitivas.</string>
+
+    <!-- Inventario -->
+    <string name="inventory_filter">Filtrar por categoría</string>
+    <string name="inventory_empty">Tu inventario está vacío. Compra cosméticos en la tienda para verlos aquí.</string>
+    <string name="inventory_blocked_note">Bloqueado hasta que existan pagos reales.</string>
+    <string name="inventory_open_team_editor">Abrir editor de equipo</string>
+    <string name="inventory_count" formatted="true" tools:ignore="PluralsCandidate">%1$d artículos</string>
+
+    <!-- Recompensas -->
+    <string name="rewards_available">Disponibles</string>
+    <string name="rewards_pending_section">Pendientes de verificación</string>
+    <string name="rewards_claimed_section">Reclamadas</string>
+    <string name="rewards_claim">Reclamar</string>
+    <string name="rewards_claimed">Reclamada</string>
+    <string name="rewards_simulate">Simular progreso</string>
+    <string name="rewards_progress" formatted="true">%1$d de %2$d</string>
+    <string name="rewards_complete">Completada</string>
+    <string name="rewards_pending_badge">Requiere verificación</string>
+    <string name="rewards_pending_hint">Esta recompensa se activará cuando exista un sistema verificado de sesiones y valoraciones. No se simula su cumplimiento.</string>
+    <string name="rewards_empty">No hay recompensas en esta sección.</string>
+    <string name="rewards_demo_hint">Misiones ficticias de demostración: pulsa Simular progreso para avanzar.</string>
+    <string name="rewards_amount" formatted="true" tools:ignore="PluralsCandidate">+%1$d Timbal Coins</string>
+
+    <!-- Estados y categorías -->
+    <string name="state_blocked">Bloqueado</string>
+    <string name="state_available">Disponible</string>
+    <string name="state_owned">Adquirido</string>
+    <string name="state_equipped">Equipado</string>
+    <string name="cat_avatar_frame">Marcos de avatar</string>
+    <string name="cat_profile_background">Fondos de perfil</string>
+    <string name="cat_banner">Banners</string>
+    <string name="cat_badge">Insignias</string>
+    <string name="cat_sticker">Stickers</string>
+    <string name="cat_pet">Mascotas</string>
+    <string name="cat_player_card">Tarjetas de jugador</string>
+    <string name="cat_team_decoration">Decoración de equipos</string>
+    <string name="cat_team_logo_frame">Marcos de logo de equipos</string>
+    <string name="cat_visual_theme">Temas visuales</string>
+    <string name="cat_bundle">Paquetes cosméticos</string>
+    <string name="rarity_common">Común</string>
+    <string name="rarity_rare">Raro</string>
+    <string name="rarity_epic">Épico</string>
+    <string name="rarity_legendary">Legendario</string>
+    <string name="tx_bonus">Bono inicial</string>
+    <string name="tx_reward">Recompensa</string>
+    <string name="tx_purchase">Compra</string>
+    <string name="shop_clp_price" formatted="true">$%1$d CLP</string>
+    <string name="shop_option_locked">Tienda</string>
+
+    <!-- Acciones de economía -->
+    <string name="shop_buy_success" formatted="true">¡%1$s comprado! Revísalo en tu inventario.</string>
+    <string name="shop_equipped" formatted="true">%1$s equipado.</string>
+    <string name="shop_unequipped" formatted="true">%1$s desequipado.</string>
+    <string name="shop_error_no_balance">No tienes saldo suficiente para esta compra.</string>
+    <string name="shop_error_owned">Este artículo ya es tuyo.</string>
+    <string name="shop_error_no_permission">Solo el capitán puede aplicar cosméticos al equipo.</string>
+    <string name="shop_error_not_owned">Adquiere este artículo antes de equiparlo.</string>
+    <string name="shop_team_editor_required">Aplica este cosmético desde el editor de equipo y pulsa Guardar.</string>
+    <string name="shop_error_generic">No se pudo completar la operación.</string>
+    <string name="shop_reward_claimed" formatted="true">Reclamaste %1$s Timbal Coins.</string>
+    <string name="shop_reward_already">Esta recompensa ya fue reclamada.</string>
+    <string name="shop_reward_incomplete">La misión aún no está completada.</string>
+    <string name="shop_reward_pending">Esta recompensa requiere un sistema de verificación.</string>
+    <string name="shop_mission_ready" formatted="true">Misión completada: %1$s. Ya puedes reclamarla.</string>
+
+    <!-- Integración con editores -->
+    <string name="shop_team_cosmetics">Cosméticos de equipo</string>
+    <string name="shop_team_cosmetics_hint">Artículos de tu inventario aplicados a la identidad del equipo. Guardar exige ser capitán.</string>
+    <string name="shop_equip_named" formatted="true">Equipar %1$s</string>
+    <string name="shop_equipped_named" formatted="true">%1$s · Equipado</string>
+    <string name="profile_inventory">Mi inventario</string>
+    <string name="home_balance_title">Tu saldo</string>
+
+    <!-- Etiquetas de cosméticos (perfil) -->
+    <string name="frame_lavanda">Lavanda</string>
+    <string name="frame_solar">Solar</string>
+    <string name="frame_neon">Neón</string>
+    <string name="background_pastel">Pastel</string>
+    <string name="background_aurora_soft">Aurora suave</string>
+    <string name="background_galaxia">Galaxia violeta</string>
+    <string name="badge_estrella">Estrella</string>
+    <string name="badge_comunidad">Comunidad</string>
+    <string name="badge_veterano">Veterano</string>
+    <string name="banner_diurno">Diurno</string>
+    <string name="banner_noche">Nocturno</string>
+    <string name="banner_estelar">Estelar</string>
+    <string name="sticker_gg">GG</string>
+    <string name="sticker_fuego">En llamas</string>
+    <string name="pet_bruno">Bruno</string>
+    <string name="pet_nube">Nube</string>
+    <string name="card_base">Tarjeta base</string>
+    <string name="card_especial">Especial</string>
+    <string name="card_cambio">Cambio</string>
+
+    <!-- Etiquetas de cosméticos (equipo) -->
+    <string name="frame_orbit">Órbita</string>
+    <string name="frame_prism">Prisma</string>
+    <string name="background_atardecer">Atardecer</string>
+    <string name="badge_flame">Llama</string>
+</resources>
