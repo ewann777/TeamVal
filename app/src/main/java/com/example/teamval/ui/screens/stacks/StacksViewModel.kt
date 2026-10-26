@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.teamval.R
 import com.example.teamval.domain.model.DraftField
+import com.example.teamval.domain.model.StackCategory
 import com.example.teamval.domain.model.StackDraft
 import com.example.teamval.domain.model.StackFilters
 import com.example.teamval.domain.model.StackSnapshot
@@ -20,6 +21,8 @@ data class StackNotice(val id: Long, val textRes: Int)
 
 data class StacksLocalState(
     val filters: StackFilters = StackFilters(),
+    /** Pestaña activa del explorador: null muestra todas las categorías. */
+    val category: StackCategory? = null,
     val ownPostsOnly: Boolean = false,
     val sentRequestsOnly: Boolean = false,
     val draft: StackDraft = StackDraft(),
@@ -45,6 +48,9 @@ class StacksViewModel(private val repository: StackRepository) : ViewModel() {
     )
 
     fun setFilters(filters: StackFilters) = local.update { it.copy(filters = filters) }
+
+    /** Cambia la pestaña de categoría; pulsa la activa para volver a ver todas. */
+    fun showCategory(category: StackCategory?) = local.update { it.copy(category = category) }
     fun showOwnPosts(own: Boolean) = local.update { it.copy(ownPostsOnly = own) }
     fun showSentRequests(sent: Boolean) = local.update { it.copy(sentRequestsOnly = sent) }
 
@@ -66,7 +72,14 @@ class StacksViewModel(private val repository: StackRepository) : ViewModel() {
         val result = repository.createPost(draft)
         if (result is StackResult.Success) {
             local.update {
-                it.copy(ownPostsOnly = true, filters = StackFilters(), draft = StackDraft(), invalidFields = emptySet())
+                // La pestaña salta a la categoría creada para que el post sea visible.
+                it.copy(
+                    ownPostsOnly = true,
+                    category = StackCategory.ofCapacity(draft.capacity),
+                    filters = StackFilters(),
+                    draft = StackDraft(),
+                    invalidFields = emptySet()
+                )
             }
         }
         report(result, R.string.stack_created)

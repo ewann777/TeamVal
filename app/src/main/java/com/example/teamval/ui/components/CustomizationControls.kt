@@ -1,6 +1,12 @@
 package com.example.teamval.ui.components
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -82,6 +88,7 @@ fun CustomizationPage(
     messageRes: Int?,
     onDiscard: () -> Unit,
     onSave: () -> Unit,
+    messageIsError: Boolean = false,
     content: @Composable ColumnScope.() -> Unit
 ) {
     BackHandler { if (!saving) onDiscard() }
@@ -118,7 +125,14 @@ fun CustomizationPage(
             ) {
                 Column(Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     HairlineDivider()
-                    messageRes?.let { Text(stringResource(it), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.testTag("preferences_message")) }
+                    val message = messageRes?.let { stringResource(it) }
+                    AnimatedVisibility(
+                        visible = message != null,
+                        enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
+                        exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.Top)
+                    ) {
+                        SaveMessage(message.orEmpty(), isError = messageIsError)
+                    }
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
                         OutlinedButton(onClick = onDiscard, enabled = !saving, modifier = Modifier.weight(1f)) {
                             Text(stringResource(R.string.editor_close))
@@ -132,6 +146,37 @@ fun CustomizationPage(
                     }
                 }
             }
+        }
+    }
+}
+
+/**
+ * Confirmación breve y elegante que aparece —con una animación de entrada—
+ * únicamente cuando el guardado se completó correctamente; los avisos de error
+ * se distinguen por su color. Al volver a modificar cualquier cosa el estado
+ * limpia el mensaje y la tira desaparece.
+ */
+@Composable
+private fun SaveMessage(message: String, isError: Boolean) {
+    val colors = MaterialTheme.colorScheme
+    val shape = MaterialTheme.shapes.medium
+    Surface(
+        color = if (isError) colors.errorContainer else colors.primaryContainer,
+        contentColor = if (isError) colors.onErrorContainer else colors.onPrimaryContainer,
+        shape = shape,
+        border = BorderStroke(
+            1.dp,
+            if (isError) colors.error.copy(alpha = 0.45f) else colors.primary.copy(alpha = 0.45f)
+        ),
+        modifier = Modifier.fillMaxWidth().testTag("preferences_message")
+    ) {
+        Row(
+            Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AccentBar(height = 16.dp)
+            Text(message, style = MaterialTheme.typography.labelLarge)
         }
     }
 }

@@ -26,6 +26,7 @@ import com.example.teamval.R
 import com.example.teamval.domain.model.DraftField
 import com.example.teamval.domain.model.GameMode
 import com.example.teamval.domain.model.Region
+import com.example.teamval.domain.model.StackCategory
 import com.example.teamval.domain.model.StackDraft
 import com.example.teamval.domain.model.ValorantRank
 import com.example.teamval.ui.components.PrimaryButton
@@ -91,8 +92,29 @@ fun CreateStackScreen(
             )
             SelectionField(
                 label = stringResource(R.string.post_capacity), selected = draft.capacity, options = (2..5).toList(),
-                optionLabel = { pluralStringResource(R.plurals.capacity_option, it, it) },
+                optionLabel = {
+                    stringResource(
+                        R.string.capacity_option_with_category,
+                        pluralStringResource(R.plurals.capacity_option, it, it),
+                        stringResource(StackCategory.ofCapacity(it).labelRes)
+                    )
+                },
                 onSelect = { onDraftChange(draft.copy(capacity = it)) }
+            )
+            val missing = StackCategory.FULL_TEAM - draft.capacity
+            Text(
+                if (missing > 0) {
+                    pluralStringResource(
+                        R.plurals.create_capacity_summary,
+                        missing,
+                        draft.capacity,
+                        draft.capacity - 1,
+                        missing
+                    )
+                } else {
+                    stringResource(R.string.create_capacity_summary_full, draft.capacity, draft.capacity - 1)
+                },
+                style = MaterialTheme.typography.bodyMedium
             )
             Text(
                 stringResource(R.string.create_capacity_hint),

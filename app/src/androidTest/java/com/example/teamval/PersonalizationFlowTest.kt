@@ -35,11 +35,16 @@ class PersonalizationFlowTest {
     private fun openProfile() { compose.onNodeWithText("Perfil").performClick() }
     private fun openAppearance() {
         openProfile()
-        compose.onNodeWithText("Apariencia").performScrollTo().performClick()
+        compose.onNodeWithText("Apariencia de la aplicación").performScrollTo().performClick()
     }
 
     private fun saved() {
         compose.waitUntil(10_000) { compose.onAllNodesWithText("Cambios guardados en este dispositivo.").fetchSemanticsNodes().isNotEmpty() }
+    }
+
+    /** La pantalla de apariencia confirma con su propio mensaje, tras guardar. */
+    private fun savedAppearance() {
+        compose.waitUntil(10_000) { compose.onAllNodesWithText("¡Apariencia actualizada!").fetchSemanticsNodes().isNotEmpty() }
     }
 
     @Test fun profileEditingPersistsCosmeticsAndUpdatesStackIdentity() {
@@ -67,7 +72,7 @@ class PersonalizationFlowTest {
         assertEquals(AvatarFrame.Double, profile.frame)
         assertEquals(ProfileBackground.Ocean, profile.background)
         assertTrue(ProfileBadge.Strategist in profile.badges)
-        compose.onNodeWithText("Stacks").performClick()
+        compose.onNodeWithTag("nav_stacks").performClick()
         compose.onNodeWithText("Mis publicaciones").performScrollTo().performClick()
         compose.onNodeWithTag("stack_explorer").performScrollToNode(hasText("Organiza Astra#CL"))
         compose.onNodeWithText("Organiza Astra#CL").assertIsDisplayed()
@@ -77,10 +82,9 @@ class PersonalizationFlowTest {
         openAppearance()
         compose.onNodeWithText("Claro").performScrollTo().performClick()
         compose.onNodeWithText("Menta").performScrollTo().performClick()
-        compose.onNodeWithText("Aurora").performScrollTo().performClick()
-        compose.onNodeWithText("Editorial").performScrollTo().performClick()
+        compose.onNodeWithTag("background_Aurora").performScrollTo().performClick()
         compose.onNodeWithTag("save_preferences").performClick()
-        saved()
+        savedAppearance()
         compose.onNodeWithText("Volver").performClick()
         compose.onNodeWithText("Inicio").performClick()
         compose.onNodeWithText("Tu próximo equipo empieza aquí.").assertExists()
@@ -89,8 +93,9 @@ class PersonalizationFlowTest {
         assertTrue(compose.onRoot().captureToImage().toPixelMap()[8, 100].luminance() > 0.7f)
         openAppearance()
         compose.onNodeWithText("Claro").performScrollTo().assertIsSelected()
-        compose.onNodeWithText("Editorial").performScrollTo().assertIsSelected()
-        assertEquals(AppAppearance(AppThemeMode.Light, "88DCC4", AppBackground.Aurora, AppFont.Editorial), runBlocking { repository.preferences.first().appearance })
+        compose.onNodeWithTag("background_Aurora").performScrollTo().assertIsSelected()
+        // Sin selector de tipografía: se conserva el estilo por defecto de la interfaz.
+        assertEquals(AppAppearance(AppThemeMode.Light, "88DCC4", AppBackground.Aurora, AppFont.Modern), runBlocking { repository.preferences.first().appearance })
     }
 
     @Test fun invalidColorDoesNotSaveAndBackDiscardsPreview() {
@@ -103,7 +108,7 @@ class PersonalizationFlowTest {
         assertEquals(AppAppearance(), runBlocking { repository.preferences.first().appearance })
         compose.activityRule.scenario.onActivity { activity -> activity.onBackPressedDispatcher.onBackPressed() }
         assertTrue(compose.onRoot().captureToImage().toPixelMap()[8, 100].luminance() < 0.2f)
-        compose.onNodeWithText("Apariencia").performScrollTo().performClick()
+        compose.onNodeWithText("Apariencia de la aplicación").performScrollTo().performClick()
         compose.onNodeWithText("Oscuro").performScrollTo().assertIsSelected()
         compose.onNodeWithTag("accent_hex").assertTextContains("FF4655")
     }

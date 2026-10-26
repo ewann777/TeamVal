@@ -2,7 +2,6 @@ package com.example.teamval.ui.components
 
 import com.example.teamval.R
 import com.example.teamval.domain.model.AppBackground
-import com.example.teamval.domain.model.AppFont
 import com.example.teamval.domain.model.AppThemeMode
 import com.example.teamval.domain.model.AvatarFrame
 import com.example.teamval.domain.model.AvatarStyle
@@ -74,11 +73,5 @@ val AppThemeMode.labelRes: Int get() = when (this) {
 val AppBackground.labelRes: Int get() = when (this) {
     AppBackground.Plain -> R.string.app_background_plain
     AppBackground.Aurora -> R.string.app_background_aurora
-    AppBackground.Grid -> R.string.app_background_grid
-}
-val AppFont.labelRes: Int get() = when (this) {
-    AppFont.Gaming -> R.string.font_gaming
-    AppFont.Modern -> R.string.font_modern
-    AppFont.Editorial -> R.string.font_editorial
-    AppFont.Mono -> R.string.font_mono
+    AppBackground.Stars -> R.string.app_background_stars
 }

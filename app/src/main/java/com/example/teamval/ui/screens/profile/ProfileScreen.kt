@@ -41,8 +41,7 @@ fun ProfileScreen(
     stats: ValorantStats,
     reputation: Reputation,
     onEdit: () -> Unit,
-    onAppearance: () -> Unit,
-    onOpenInventory: () -> Unit = {}
+    onAppearance: () -> Unit
 ) {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         Column(
@@ -59,9 +58,8 @@ fun ProfileScreen(
             ProfileHero(profile)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 PrimaryButton(text = stringResource(R.string.edit_profile), onClick = onEdit)
-                OutlinedButton(onClick = onAppearance, modifier = Modifier.testTag("profile_appearance")) { Text(stringResource(R.string.appearance_title)) }
-                OutlinedButton(onClick = onOpenInventory, modifier = Modifier.testTag("profile_inventory")) {
-                    Text(stringResource(R.string.profile_inventory))
+                OutlinedButton(onClick = onAppearance, modifier = Modifier.testTag("profile_appearance")) {
+                    Text(stringResource(R.string.appearance_access_title))
                 }
             }
             Text(stringResource(R.string.appearance_access_hint), style = MaterialTheme.typography.bodyMedium,

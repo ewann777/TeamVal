@@ -64,14 +64,20 @@ val Typography = Typography(
     )
 )
 
+/**
+ * Estilo único de la interfaz («Moderno»): Outfit para el cuerpo y Exo 2 para
+ * los títulos. `Gaming` es el valor histórico con el mismo resultado y los
+ * valores heredados Editorial/Mono conservan su familia para no romper
+ * preferencias guardadas antiguas.
+ */
 fun teamValTypography(font: AppFont): Typography {
-    val family = when (font) {
-        AppFont.Gaming -> Outfit
-        AppFont.Modern -> FontFamily.SansSerif
-        AppFont.Editorial -> FontFamily.Serif
-        AppFont.Mono -> FontFamily.Monospace
+    val bundled = font == AppFont.Modern || font == AppFont.Gaming
+    val family = when {
+        bundled -> Outfit
+        font == AppFont.Editorial -> FontFamily.Serif
+        else -> FontFamily.Monospace
     }
-    val heading = if (font == AppFont.Gaming) Exo2 else family
+    val heading = if (bundled) Exo2 else family
     return Typography.copy(
         displayLarge = Typography.displayLarge.copy(fontFamily = heading, fontWeight = FontWeight.Bold),
         displayMedium = Typography.displayMedium.copy(fontFamily = heading, fontWeight = FontWeight.Bold),

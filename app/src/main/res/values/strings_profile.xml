@@ -61,12 +61,13 @@
     <string name="preferences_loading">Preparando tu espacio…</string>
     <string name="preferences_retry">Reintentar</string>
     <string name="appearance_title">Apariencia</string>
-    <string name="appearance_preview">Diseña tu TeamVal</string>
-    <string name="appearance_preview_hint">Esta pantalla y la navegación muestran la vista previa. Guarda para aplicar el estilo en toda la aplicación.</string>
+    <string name="appearance_access_title">Apariencia de la aplicación</string>
+    <string name="appearance_updated">¡Apariencia actualizada!</string>
+    <string name="appearance_colors_style">Colores y estilo</string>
+    <string name="appearance_colors_style_hint">Presets, tema y color de acento en un solo lugar, con vista previa en vivo.</string>
     <string name="preview_live">VISTA PREVIA EN VIVO</string>
     <string name="appearance_sample_title">Tu estilo. Tu equipo.</string>
     <string name="appearance_sample_body">Colores que conectan, detalles que te representan. Haz de TeamVal tu propio espacio.</string>
-    <string name="apply_appearance">Aplicar apariencia</string>
     <string name="appearance_theme">Tema de aplicación</string>
     <string name="theme_dark">Oscuro</string>
     <string name="theme_light">Claro</string>
@@ -83,12 +84,9 @@
     <string name="custom_color_error">Introduce un color válido de seis dígitos, por ejemplo #C4B5FD.</string>
     <string name="accent_contrast_hint">La intensidad del acento se adapta al tema para mantener el contraste del texto.</string>
     <string name="appearance_background">Fondo de la aplicación</string>
+    <string name="appearance_background_hint">Cada miniatura dibuja exactamente el fondo que verás en la aplicación.</string>
     <string name="app_background_plain">Liso</string>
     <string name="app_background_aurora">Aurora</string>
-    <string name="app_background_grid">Cuadrícula</string>
-    <string name="appearance_font">Tipografía</string>
-    <string name="font_modern">Moderna</string>
-    <string name="font_editorial">Editorial</string>
-    <string name="font_mono">Mono</string>
-    <string name="appearance_reset">Restablecer lavanda y carbón</string>
+    <string name="app_background_stars">Estrellas</string>
+    <string name="appearance_reset">Restablecer valores predeterminados</string>
 </resources>

@@ -99,7 +99,8 @@ class LocalPreferencesRepositoryTest {
             val before = store.data.first()
             val repository = LocalPreferencesRepository(store)
             val saved = repository.preferences.first()
-            assertEquals(AppAppearance(AppThemeMode.Light, "88DCC4", AppBackground.Grid, AppFont.Editorial, AppPalette.Legacy), saved.appearance)
+            // «Grid» (Cuadrícula) fue retirada de la interfaz y se migra a «Stars».
+            assertEquals(AppAppearance(AppThemeMode.Light, "88DCC4", AppBackground.Stars, AppFont.Editorial, AppPalette.Legacy), saved.appearance)
             assertEquals("Jugador existente", saved.profile.name)
             assertEquals(before, store.data.first())
             repository.saveAppearance(saved.appearance)
@@ -114,7 +115,8 @@ class LocalPreferencesRepositoryTest {
             repo.saveProfile(PlayerProfile(name = "Perfil conservado"))
             assertEquals(AppAppearance(), repo.preferences.first().appearance)
             assertEquals("FF4655", repo.preferences.first().appearance.accentHex)
-            assertEquals(AppFont.Gaming, repo.preferences.first().appearance.font)
+            // El estilo único de la interfaz es el moderno (Outfit + Exo 2).
+            assertEquals(AppFont.Modern, repo.preferences.first().appearance.font)
         }
         AppearancePreset.entries.forEach { preset ->
             val appearance = preset.apply(AppAppearance(font = AppFont.Mono))

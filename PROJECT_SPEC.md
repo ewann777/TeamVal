@@ -738,3 +738,359 @@ backend, API de Riot ni pagos reales.
   código ni se tocó ninguna prueba.
 
 Detalle y comandos en `ROADMAP.md`.
+
+## 13. Etapa 5.5 — Bloque B: Buscar equipo
+
+### Renombre de la sección
+
+La sección de stacks pasa a llamarse **Buscar equipo** en la barra inferior, la
+cabecera de la pantalla, la tarjeta de inicio y su botón principal
+(`nav_stacks`, `stacks_title`, `home_action`, `back_to_stacks`,
+`home_stacks_description`). La ruta de navegación (`stacks`), el tag de pruebas
+`nav_stacks` y todas las etiquetas internas se conservan, de modo que la
+navegación y las pruebas existentes siguen funcionando. La tienda, el perfil y
+las monedas no se tocan.
+
+### Clasificación de grupos
+
+El tipo de grupo se deriva del tamaño objetivo `capacity` (2..5, ya validado
+por `StackDraft.invalidFields` y `InMemoryStackRepository`):
+
+| Categoría | `capacity` | Caso ambiguo |
+| --- | --- | --- |
+| Dúo | 2 | — |
+| Trío | 3 | — |
+| Stack | 4 o 5 | Un grupo de 4 no es dúo ni trío: se agrupa como stack y se muestra «Falta 1 jugador para un equipo de 5». |
+
+Se distinguen siempre tres cifras sin solape, calculadas en `StackPost`:
+
+- **Integrantes actuales**: `memberIds.size` («Integrantes: 1 de 2»).
+- **Cupos disponibles**: `capacity - memberIds.size` (lo que la publicación busca).
+- **Jugadores que faltan para 5**: `5 - capacity` (lo que queda fuera del grupo).
+
+Se cumple `integrantes + cupos + faltantes = 5`, por lo que un dúo con un
+integrante ofrece 1 cupo y aún hacen falta 3 jugadores fuera de ese dúo, mientras
+un stack de 5 con 3 integrantes ofrece 2 cupos y no falta nadie fuera. Un grupo
+de 4 completo sigue sin cubrir un equipo de 5.
+
+### Explorador y pestañas
+
+- `StackSearch(category, filters, ownPostsOnly, playerId)` centraliza el filtro
+  combinado en dominio: la categoría se aplica **junto** a los filtros
+  existentes de rango, región y modalidad, a «Mis publicaciones» y a la regla
+  de mostrar publicaciones ajenas por defecto.
+- `category` vive en `StacksLocalState` (no en `StackFilters`) para no alterar
+  `isActive`, el panel de filtros ni su botón de limpiar; sobrevive a la
+  recreación de la actividad y se restablece por proceso como el resto del
+  estado local.
+- Tres pestañas horizontales **Dúo / Trío / Stack** en un `stickyHeader` con
+  fondo sólido y filete, siempre visibles sobre la lista y sin abrir el panel de
+  filtros. Sin pestaña activa se ven todas las categorías (comportamiento
+  anterior); pulsar la pestaña activa vuelve a esa vista y muestra la pista
+  «Pulsa la pestaña activa para volver a ver todos los grupos».
+- Al crear una publicación se activa la pestaña de su categoría y «Mis
+  publicaciones», para que el post nuevo sea visible de inmediato.
+- Estados vacíos diferenciados: sin resultados por filtros, sin resultados en la
+  categoría (con acción «Ver todos los grupos»), sin publicaciones propias y
+  caso genérico.
+
+### Tarjeta de publicación y creación
+
+- Badge de categoría junto a los existentes de rango, región y modo.
+- Línea «Integrantes: X de Y», fila de cinco plazas (ocupadas, libres con borde
+  de acento y apagadas) con `contentDescription` legible, «N cupos
+  disponibles»/«Sin cupos disponibles» y, en un pie de texto aparte, «Este grupo
+  cubre X de 5 jugadores y quedan N fuera para completar el equipo» o «Este
+  grupo ya cubre los 5 jugadores del equipo».
+- La frase de 5 jugadores se redacta siempre **en relación con el grupo, no con
+  la publicación**: nunca dice «faltan N jugadores» a secas, para que no se
+  confunda con lo que se busca (los cupos). En crear publicación el resumen es
+  «Tú ocupas 1 de N plazas; quedan C por cubrir. Este grupo cubre N de 5
+  jugadores y quedan M fuera…».
+- Crear publicación: las opciones del tamaño muestran «N jugadores · Dúo/Trío/
+  Stack» y un resumen en vivo de plazas, cupos por cubrir y aportación al
+  equipo de 5.
+- No se elimina ninguna función: filtros, pestañas de alcance, crear, unirse,
+  gestionar y simular solicitudes siguen disponibles.
+
+### Límites
+
+Sin backend, API de Riot, filtros Premier, selectores de rango nuevas,
+animaciones nuevas ni cambios en tienda, perfil o monedas. Los datos demo
+actuales (dúos, tríos y stacks de `DemoStackData`) se interpretan sin migración
+ni cambio de formato.
+
+### Verificación del bloque B
+
+Ejecutada el 26/10/2026 con `.\gradlew.bat` sobre el emulador Pixel_6 (API 37):
+
+- `:app:assembleDebug` → **BUILD SUCCESSFUL** (compila sin errores).
+- `:app:testDebugUnitTest` → **103 pruebas, 0 fallos, 0 omitidas** (2.417 s);
+  incluye las 3 nuevas de `StackSearchTest`.
+- `:app:lintDebug` → **0 errores, 8 avisos** (los 8 son preexistentes de
+  dependencias/objetivos de compilación, no de este bloque).
+- `:app:connectedDebugAndroidTest` → **BUILD SUCCESSFUL (8 min 33 s)**,
+  **36 pruebas, 0 fallos, 0 errores, 0 omitidas** en 10 suites:
+  `AppearanceIdentityTest` (2), `EconomyStorageTest` (2), `EconomyViewModelTest`
+  (3), `ExampleInstrumentedTest` (1), `PersonalizationFlowTest` (3),
+  `StacksFlowTest` (4, incluida la nueva de pestañas), `Stage41FlowTest` (5),
+  `Stage5FlowTest` (9), `TeamFlowTest` (4), `TeamLogoStorageTest` (3).
+- Revisión visual en el emulador (1080×2400): pestañas **Dúo → 2 publicaciones**,
+  **Trío → 1 publicación**, **Stack → 2 publicaciones** y **sin pestaña → 5
+  publicaciones**; barra de pestañas fija sobre las publicaciones al hacer
+  scroll; panel de filtros abrible con «Ocultar filtros», los tres filtros
+  previos y «Limpiar filtros», y combinación pestaña + filtro verificada (Dúo +
+  LATAM Sur → 1 publicación); tarjeta con «Integrantes: 1 de 2» y «1 cupo
+  disponible» (dúo) e «Integrantes: 3 de 5», «2 cupos disponibles» y «Este grupo
+  ya cubre los 5 jugadores del equipo» (stack); creación con «2 jugadores ·
+  Dúo» y el resumen de plazas/cupos descrito arriba.
+
+## 14. Etapa 5.5 - Mejora de experiencia de usuario: Perfil y Apariencia
+
+### Alcance
+
+Reordenar la sección **Perfil** y la pantalla **Apariencia**, corregir los fondos
+y reducir la tipografía a un único estilo, sin tocar **Buscar equipo**, la tienda,
+las monedas ni el resto de funciones. Sin backend, API de Riot ni migraciones de
+datos: la única migración es la lectura segura de la preferencia de fondo.
+
+### 1. Sección Perfil
+
+- Acceso **«Apariencia de la aplicación»** con la descripción **«Colores, tema y
+  fondo de TeamVal»**.
+- El acceso directo «Mi inventario» desaparece de Perfil, pero **el inventario se
+  mantiene**: mismos datos, misma ruta (`InventoryRoute`) y misma funcionalidad,
+  accesible desde la tienda.
+- «Editar perfil» sigue siendo un acceso independiente y operativo.
+
+### 2. Apariencia: sección «Colores y estilo»
+
+- Las anteriores secciones «Tu estilo, de un vistazo» y «Color de acento» se
+  fusionan en **una sola** («Colores y estilo») que conserva los presets, el tema
+  de aplicación y el color de acento, **sin duplicar controles**.
+- La pantalla incluye una **vista previa clara** de la selección y, además, la
+  preferencia sin guardar se aplica en vivo a toda la aplicación.
+- Se retira el botón duplicado «Aplicar apariencia» (equivale al «Guardar» de la
+  barra inferior) y se conserva **«Restablecer valores predeterminados»**.
+- Las preferencias guardadas no se pierden.
+
+### 3. Fondos: exactamente tres
+
+- **Liso**: color uniforme del tema. Sin auroras, cuadrículas, partículas ni
+  degradados decorativos.
+- **Aurora**: auroras suaves y claramente visibles, con degradados luminosos
+  derivados del color de acento y por tanto coherentes con el tema; se distingue
+  fácilmente de Liso.
+- **Estrellas**: muchas estrellas pequeñas, con sutiles diferencias de tamaño y
+  brillo, sobre fondo adaptado al tema; no parece otra aurora. Sin animación, para
+  priorizar rendimiento y legibilidad.
+- **Se elimina «Cuadrícula»** y se sustituye por «Estrellas» con migración segura:
+  el valor `Grid` guardado se lee como `Stars` y los desconocidos vuelven al
+  predeterminado, sin escribir ni resetear nada.
+- Las miniaturas de selección se dibujan con la misma implementación que el fondo
+  real (`AppBackgroundView`), por lo que representan fielmente lo que se va a ver.
+
+### 4. Tipografía
+
+- Un único estilo, **Moderno (Outfit + Exo 2)**, y **selector retirado** de la
+  interfaz: la pantalla ya no permite cambiar de fuente.
+- Compatibilidad conservada: el enum `AppFont`, los recursos TTF, las licencias y
+  la correspondencia histórica de `Editorial`/`Mono` siguen existiendo, de modo que
+  una preferencia antigua se lee sin errores ni pérdida de datos (y el cosmético
+  «Aqualux», que guarda `Mono`, sigue funcionando en la tienda).
+
+### 5. Guardado
+
+- Guardado persistente en DataStore, como hasta ahora.
+- Al pulsar **Guardar**, y solo cuando el guardado se completa correctamente, se
+  muestra la confirmación breve **«¡Apariencia actualizada!»**; los errores se
+  distinguen por color y mensaje.
+
+### Verificación del encargo de Perfil y Apariencia
+
+Ejecutada el 26/10/2026 con `.\gradlew.bat` sobre el emulador Pixel_6 (API 37):
+
+- `:app:assembleDebug` → **BUILD SUCCESSFUL** (compila sin errores).
+- `:app:testDebugUnitTest` → **104 pruebas, 0 fallos, 0 omitidas** (14 suites);
+  incluye la migración `Grid`→`Stars`, el estilo por defecto «Moderno»
+  (Outfit + Exo 2) y la nueva prueba de `hueShift`.
+- `:app:lintDebug` → **0 errores, 8 avisos** (los 8 preexistentes de
+  dependencias: 7 `GradleDependency` + 1 `NewerVersionAvailable`).
+- `:app:connectedDebugAndroidTest` → **BUILD SUCCESSFUL (6 min 57 s)**,
+  **38 pruebas, 0 fallos, 0 errores, 0 omitidas** en 11 suites, con las 2 nuevas
+  de `AppearanceBackgroundsTest` y las actualizadas
+  `PersonalizationFlowTest` / `AppearanceIdentityTest`.
+- Pruebas de fondos por píxeles: Liso varianza < 0,0005, Aurora degradado suave
+  sin destellos, Estrellas con más de 5× los destellos de las otras dos y
+  parejas claramente distintas; la vista previa no escribe hasta «Guardar» y la
+  selección persiste tras recrear la actividad.
+- Medición manual sobre capturas del emulador: Liso **0,0092 uniforme**;
+  Aurora **0,06–0,15** con transiciones suaves; Estrellas base **0,009** con
+  destellos de hasta **0,93**. Texto directo `#C4CDD5`: **≥11:1** sobre Liso y
+  Estrellas, ≈**5:1** sobre Aurora (mínimo ≈3,3:1 en el punto más brillante del
+  resplandor, asumido porque la aurora se pide «luminosa»).
+- Sin cambios en Buscar equipo, la tienda ni las monedas (el único punto de la
+  tienda tocado es el renombrado `AppBackground.Grid`→`Stars` en
+  `CosmeticBindings`, forzado por el compilador).
+
+
+## 15. Etapa 5.6 - Correcciones visuales: tema, Estrellas y pestañas
+
+**Cierre v0.5.6:** corrección visual aprobada por el usuario. Los resultados
+instrumentados históricos de las secciones anteriores no certifican una suite
+completa sobre la última corrección; consultar la auditoría y la reejecución
+focalizada del registro de cierre en `ROADMAP.md`.
+
+### Alcance
+
+Correcciones pedidas tras probar la app en el emulador: selección de tema,
+fondo Estrellas, pestañas Dúo/Trío/Stack y revisión de legibilidad. Sin
+cambios en la tienda, la economía ni en la lógica de búsqueda y filtros.
+
+### Selección de tema
+
+- `TeamValTheme` decide el modo con `Dark`/`Light`/`System`, donde `System`
+  usa `isSystemInDarkTheme()`; el esquema sale de
+  `teamValColorScheme(appearance, dark)` y `TeamValVisuals` se deriva de ese
+  esquema, así que todos los componentes (tarjetas, botones, navegación
+  inferior) cambian con el tema.
+- La selección se previsualiza **en vivo** en toda la pantalla mientras se
+  está en Apariencia; «Guardar» persiste en DataStore; «Volver» o cualquier
+  otra salida descarta el borrador (`DisposableEffect` en `AppearanceRoute`).
+- El grupo «Tema de aplicación» es el primero de «Colores y estilo», visible
+  al abrir la pantalla.
+
+### Fondo Estrellas
+
+Retícula de 15 dp con un tercio de celdas ocupadas (≈530 estrellas por
+pantalla), radios de 0,65–1,7 dp, solo 18 % brillantes con halo suave,
+semilla fija `0x57415253` y sin animación. Tema oscuro: marfil, azul claro y
+blanco (alfa 0,28–0,92). Tema claro: tinta azul pizarra `#33465C` con alfa
+0,12–0,36, para que no se lean como puntos negros.
+
+### Pestañas Dúo / Trío / Stack
+
+Sin ningún panel detrás. El `stickyHeader` anterior pintaba el color plano
+del tema y, en la primera corrección, `surfaceContainerHigh` al 97 %; ambos
+casos dejaban un **rectángulo visible** delante del fondo, así que se
+eliminan por completo:
+
+- `stickyHeader` → `item(key = "categories")`.
+- Sin `Modifier.background(...)` ni `HairlineDivider` en el contenedor.
+- Los tres botones quedan como únicos elementos: `weight(1f)`, 46 dp de alto,
+  esquinas de 18 dp; el activo con `colors.primary` y `colors.onPrimary`, los
+  inactivos con `colors.surface`, `colors.onSurface` y filete
+  `colors.outlineVariant`.
+
+Dejan de ser fijas a propósito: un elemento fijo necesita un fondo opaco
+para que las publicaciones no se vean por detrás, y ese fondo es el
+rectángulo que hay que eliminar. Al integrarse en el listado, cada elemento
+se coloca debajo del anterior y nunca hay solape, por lo que el espacio que
+rodea a los botones muestra exactamente el fondo real (Liso, Aurora o
+Estrellas).
+
+Se retiró también el texto permanente «Pulsa la pestaña activa para volver a
+ver todos los grupos» y su recurso `stack_category_hint`. La deselección
+sigue funcionando al pulsar la pestaña activa (y con «Ver todos los grupos»
+en el estado vacío). Se conservan los testTags `category_bar` y
+`category_<Categoría>`.
+
+### Límites
+
+No se tocaron filtros, búsqueda, tienda, economía ni el resto de pantallas.
+
+### Verificación de las correcciones visuales
+
+Ejecutada el 26/10/2026 con `.\gradlew.bat` sobre el emulador Pixel_6 (API 37):
+
+- `:app:assembleDebug` -> **BUILD SUCCESSFUL**.
+- `:app:testDebugUnitTest` -> **104 pruebas, 0 fallos, 0 omitidas** (14 suites).
+- `:app:lintDebug` -> **0 errores, 8 avisos** (preexistentes de dependencias).
+- Medición de luminancia media de pantalla completa: Oscuro **56**, Claro
+  **232**, Sistema con dispositivo oscuro **42** y con dispositivo claro
+  **227**; las cinco pestañas en claro quedan entre **215,7** y **234,8**.
+- Vista previa sin guardar **235** y **43** tras salir sin guardar; la
+  preferencia guardada sobrevive al reinicio del proceso (**43**).
+- Estrellas: campo de ~530 puntos por pantalla, radios 0,65-1,7 dp; la prueba
+  de píxeles confirma Liso plano, Aurora degradado suave y Estrellas con
+  puntos netamente distintos, y que la vista previa no escribe hasta
+  «Guardar».
+- Pestañas: sin fondo ni decoración en el contenedor; las pestañas son un
+  `item` del listado y el hueco que las rodea muestra el fondo real. Sobre
+  captura real con Aurora, la columna del hueco entre Dúo y Trío varía de
+  forma continua (87,69,69 -> 87,85,77 -> 86,95,79 -> 85,100,83) sin escalón,
+  con los tres botones de ancho idéntico (304 px). Con Claro + Estrellas, la
+  densidad de estrellas en el hueco (9,6 %) queda dentro del rango de las
+  zonas libres adyacentes (12,1 % y 7,4 %). Al pulsar Dúo se filtra a
+  «2 publicaciones» sin abrir el panel de filtros.
+- `StacksFlowTest` adaptado al hecho de que las pestañas ya no son fijas:
+  auxiliar `scrollToCategoryTabs()` que vuelve al inicio del listado antes de
+  tocarlas, con **las mismas aserciones** (cambio de grupo, recuentos,
+  ausencia del panel de filtros, selección tras recrear la actividad y
+  deselección).
+- Sin cambios en la tienda, la economía, la búsqueda ni los filtros.
+
+## 16. Próxima etapa propuesta — Marcos cosméticos de perfil
+
+**Solo planificación; implementación pendiente de autorización.** Ampliar la
+categoría existente de marcos de avatar y previsualizarlos sobre el perfil real
+del usuario antes de comprarlos con TeamVal Coins. No se ha modificado la tienda
+en este cierre para implementar esta propuesta.
+
+### Catálogo inicial propuesto (precios sujetos a aprobación)
+
+| Marco | Diseño original | Rareza | Precio TC |
+| --- | --- | --- | ---: |
+| Rosas Carmesí | Pétalos y espinas estilizados en rojo | Raro | 200 |
+| Lavanda Mística | Cristales y ornamentos lavanda | Raro | 250 |
+| Sombra Espectral | Capas translúcidas y halo violeta | Épico | 350 |
+| Radiante Dorado | Filigrana geométrica y brillo dorado | Épico | 450 |
+| Constelación Azul | Estrellas conectadas con destellos discretos | Legendario | 600 |
+| Energía Suprema | Aro de energía con pulsación y partículas animadas | Legendario | 800 |
+
+Son nombres y diseños propios: «Radiante» no usará el emblema de rango oficial.
+Los diseños se dibujarán con Canvas/vectores propios, sin copiar recursos de Riot.
+Los importes parten de los marcos actuales (100/180/320 TC) y el bono de 500 TC;
+antes de fijarlos se comprobará su accesibilidad con las recompensas actuales,
+sin contar misiones bloqueadas por verificación como ingresos disponibles.
+
+### Flujo y arquitectura previstos
+
+1. Tienda → Marcos → «Probar en mi perfil»: mostrar `ProfileHero` con nombre,
+   avatar, fondo e insignias reales, sustituyendo únicamente el marco en una
+   copia temporal del perfil. Comparar con el equipado y cerrar sin cambios.
+2. Reutilizar `AvatarFrame`, `ShopItem` y
+   `CosmeticBinding(Profile, AvatarFrame, variante)`. Añadir identificadores
+   estables sin renombrar los anteriores; conservar propiedad y selección ya
+   persistidas. No crear otro monedero ni tabla de equipados.
+3. Extraer el dibujo de marcos de `PlayerAvatar` a un componente/renderizador
+   compartido por perfil, editor, miniaturas y vista previa. Reservar espacio
+   para ornamentos sin tapar el avatar ni el texto.
+4. Ampliar el detalle actual (`ShopDialogs.kt`, que hoy muestra `CosmeticArt`)
+   con la vista previa del perfil. Mantener selección temporal separada de
+   `PreferencesRepository`; volver, cancelar o cambiar de artículo no escribirá
+   preferencias ni comprará. Restaurar solo el identificador de vista previa
+   tras recreación, resolviendo nuevamente el catálogo y el perfil actual.
+5. Comprar con la confirmación existente y `LocalEconomyRepository.purchase`:
+   precio canónico, saldo suficiente, propiedad única y transacción atómica.
+   Comprar concede propiedad; «Equipar» será una acción explícita posterior vía
+   `EconomyViewModel`, con validación de propiedad. Si falla equipar, conservar
+   la compra y permitir reintentar sin cobrar otra vez.
+6. Para Energía Suprema: animación Compose únicamente mientras sea visible y la
+   pantalla esté activa, partículas acotadas y versión estática cuando las
+   animaciones estén desactivadas. Comprobar rendimiento en API 24 y emulador,
+   temas claro/oscuro, tamaños de texto y ausencia de destellos agresivos.
+
+### Orden y aceptación previstos
+
+- Primero aprobar diseños/precios y construir los cinco marcos estáticos;
+  después integrar previsualización, compra/equipado y finalmente el animado.
+- Pruebas de catálogo/vínculos y compatibilidad de preferencias anteriores;
+  compra con saldo exacto/insuficiente, doble toque, rollback y propiedad única.
+- Pruebas de interfaz: previsualizar sin escribir ni cobrar, cambiar de marco,
+  cancelar/Atrás/recrear, comprar, equipar y persistir tras reinicio; bloquear
+  equipar artículos no adquiridos y conservar el perfil tras errores.
+- Verificar que perfil y vista previa usan el mismo dibujo y que el marco
+  animado tiene alternativa estática. Mantener todas las pruebas existentes.
+- Solo cosmética con TC; sin ventajas competitivas, pagos reales, SDK de pagos,
+  recursos oficiales protegidos de Riot ni implementación anticipada.

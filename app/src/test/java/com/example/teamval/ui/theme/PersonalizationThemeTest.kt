@@ -52,14 +52,35 @@ class PersonalizationThemeTest {
 
     @Test
     fun gamingTypographyCoversEveryMaterialRoleAndKeepsLegacySelection() {
-        val type = teamValTypography(AppFont.Gaming)
-        listOf(type.displayLarge, type.displayMedium, type.displaySmall, type.headlineLarge,
-            type.headlineMedium, type.headlineSmall, type.titleLarge, type.titleMedium, type.titleSmall)
-            .forEach { assertEquals(Exo2, it.fontFamily) }
-        listOf(type.bodyLarge, type.bodyMedium, type.bodySmall, type.labelLarge, type.labelMedium, type.labelSmall)
-            .forEach { assertEquals(Outfit, it.fontFamily) }
+        // Estilo único visible de la interfaz: Outfit (cuerpo) + Exo 2 (títulos).
+        listOf(AppFont.Modern, AppFont.Gaming).forEach { font ->
+            val type = teamValTypography(font)
+            listOf(type.displayLarge, type.displayMedium, type.displaySmall, type.headlineLarge,
+                type.headlineMedium, type.headlineSmall, type.titleLarge, type.titleMedium, type.titleSmall)
+                .forEach { assertEquals("$font títulos", Exo2, it.fontFamily) }
+            listOf(type.bodyLarge, type.bodyMedium, type.bodySmall, type.labelLarge, type.labelMedium, type.labelSmall)
+                .forEach { assertEquals("$font cuerpo", Outfit, it.fontFamily) }
+        }
+        // Valores antiguos: siguen resolviendo sin errores aunque la interfaz ya no los ofrece.
         assertEquals(androidx.compose.ui.text.font.FontFamily.Serif, teamValTypography(AppFont.Editorial).bodyLarge.fontFamily)
         assertEquals(androidx.compose.ui.text.font.FontFamily.Monospace, teamValTypography(AppFont.Mono).headlineLarge.fontFamily)
+    }
+
+    @Test
+    fun hueShiftRotatesTheToneKeepingAlphaAndRelativeBrightness() {
+        val red = Color(0xFFFF4655)
+        // Rojo TeamVal: tinte ≈ 355°, al girarlo 120° acaba en un verde vecino.
+        val green = hueShift(red, 120f)
+        assertEquals(0.333f, green.red, 0.01f)
+        assertEquals(1f, green.green, 0.01f)
+        assertEquals(0.275f, green.blue, 0.01f)
+        assertEquals(red.alpha, green.alpha, 0.001f)
+        // La vuelta completa devuelve el mismo color y el alfa nunca cambia.
+        assertEquals(red.red, hueShift(red, 360f).red, 0.001f)
+        assertEquals(red.green, hueShift(red, 360f).green, 0.001f)
+        assertEquals(0.35f, hueShift(Color(0x59000000), 200f).alpha, 0.002f)
+        // Los grises no tienen tinte: conservan su brillo con cualquier giro.
+        assertEquals(hueShift(Color(0xFF808080), 90f).red, 0.5f, 0.01f)
     }
 
     @Test

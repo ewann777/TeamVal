@@ -1,10 +1,25 @@
-<resources>
-    <string name="stacks_title">Encuentra tu equipo</string>
-    <string name="stacks_subtitle">VALORANT · Tu estilo, tu región, tu próximo stack.</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="stacks_title">Buscar equipo</string>
+    <string name="stacks_subtitle">Dúo, trío o stack · tu rango, tu región y tu modalidad de VALORANT.</string>
     <string name="stack_demo_notice">Demo local · Juegas como %1$s. Publicaciones y solicitudes ficticias; se reinician al cerrar el proceso de la app.</string>
     <string name="create_stack">Crear publicación</string>
     <string name="explore_stacks">Explorar</string>
     <string name="my_posts">Mis publicaciones</string>
+    <string name="stack_tab_duo">Dúo</string>
+    <string name="stack_tab_trio">Trío</string>
+    <string name="stack_tab_stack">Stack</string>
+    <string name="stack_members_line">Integrantes: %1$d de %2$d</string>
+    <plurals name="stack_slots">
+        <item quantity="one">%1$d cupo disponible</item>
+        <item quantity="other">%1$d cupos disponibles</item>
+    </plurals>
+    <string name="stack_no_slots">Sin cupos disponibles</string>
+    <plurals name="stack_team_coverage">
+        <item quantity="one">Este grupo cubre %1$d de 5 jugadores y queda %2$d fuera para completar el equipo.</item>
+        <item quantity="other">Este grupo cubre %1$d de 5 jugadores y quedan %2$d fuera para completar el equipo.</item>
+    </plurals>
+    <string name="stack_team_complete">Este grupo ya cubre los 5 jugadores del equipo</string>
+    <string name="stack_group_legend" tools:ignore="PluralsCandidate">Plazas de un equipo de 5: %1$d ocupadas por integrantes, %2$d libres por cupos y %3$d fuera de este grupo.</string>
     <string name="show_filters">Filtrar stacks</string>
     <string name="show_active_filters">Filtros activos · Editar</string>
     <string name="hide_filters">Ocultar filtros</string>
@@ -21,7 +36,10 @@
     </plurals>
     <string name="no_stacks_title">Tu próximo equipo está por llegar</string>
     <string name="no_stacks_filtered">No hay publicaciones con estos filtros. Prueba otra combinación.</string>
+    <string name="no_category_stacks">No hay publicaciones de este tipo ahora mismo. Prueba otra pestaña o vuelve a ver todos.</string>
+    <string name="no_stacks_any">Todavía no hay publicaciones. Crea la primera y forma tu equipo.</string>
     <string name="no_own_stacks">Crea tu primera publicación e invita a otros jugadores a compartir la partida.</string>
+    <string name="see_all_categories">Ver todos los grupos</string>
     <string name="stack_host">Organiza %1$s</string>
     <plurals name="stack_occupancy">
         <item quantity="one">%1$d de %2$d jugador</item>
@@ -35,11 +53,17 @@
         <item quantity="other">Gestionar solicitudes (%1$d pendientes)</item>
     </plurals>
     <string name="simulate_request">Simular solicitud</string>
-    <string name="back_to_stacks">Volver a Stacks</string>
+    <string name="back_to_stacks">Volver a Buscar equipo</string>
     <string name="create_stack_subtitle">Cuéntale al equipo qué buscas. Tú ocupas la primera plaza.</string>
     <string name="post_title">Título de la publicación</string>
     <string name="post_description">Descripción</string>
     <string name="post_capacity">Tamaño del stack</string>
+    <string name="capacity_option_with_category" formatted="true">%1$s · %2$s</string>
+    <plurals name="create_capacity_summary">
+        <item quantity="one">Tú ocupas 1 de %1$d plazas; quedan %2$d por cubrir. Este grupo cubre %1$d de 5 jugadores y queda %3$d fuera para completar el equipo.</item>
+        <item quantity="other">Tú ocupas 1 de %1$d plazas; quedan %2$d por cubrir. Este grupo cubre %1$d de 5 jugadores y quedan %3$d fuera para completar el equipo.</item>
+    </plurals>
+    <string name="create_capacity_summary_full" tools:ignore="PluralsCandidate">Tú ocupas 1 de %1$d plazas; quedan %2$d por cubrir. Este grupo ya cubre los 5 jugadores del equipo.</string>
     <plurals name="capacity_option">
         <item quantity="one">%1$d jugador</item>
         <item quantity="other">%1$d jugadores</item>

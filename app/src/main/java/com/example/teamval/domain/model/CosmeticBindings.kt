@@ -13,7 +13,7 @@ inline fun <reified T : Enum<T>> enumByName(name: String): T? = enumValues<T>().
 object VisualThemePresets {
     val presets: Map<String, AppAppearance> = mapOf(
         "Cosmico" to AppAppearance(accentHex = "8B5CF6", background = AppBackground.Aurora, font = AppFont.Modern),
-        "Aqualux" to AppAppearance(accentHex = "22D3EE", background = AppBackground.Grid, font = AppFont.Mono)
+        "Aqualux" to AppAppearance(accentHex = "22D3EE", background = AppBackground.Stars, font = AppFont.Mono)
     )
 
     fun matches(appearance: AppAppearance, name: String): Boolean {

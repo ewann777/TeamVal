@@ -1,6 +1,8 @@
 package com.example.teamval.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -111,6 +113,7 @@ fun TeamValNavHost(
                     currentPlayerId = stacksViewModel.currentPlayer.id,
                     currentPlayerName = profileState.saved?.profile?.name ?: stacksViewModel.currentPlayer.name,
                     onFiltersChange = stacksViewModel::setFilters,
+                    onCategoryChange = stacksViewModel::showCategory,
                     onShowOwnPosts = stacksViewModel::showOwnPosts,
                     onCreate = {
                         stacksViewModel.startCreating()
@@ -163,8 +166,7 @@ fun TeamValNavHost(
                         onAppearance = {
                             profileViewModel.editAppearance()
                             navController.navigate(AppearanceRoute) { launchSingleTop = true }
-                        },
-                        onOpenInventory = { navController.navigate(InventoryRoute) { launchSingleTop = true } }
+                        }
                     )
                 }
             }
@@ -178,6 +180,12 @@ fun TeamValNavHost(
                 )
             }
             composable(AppearanceRoute) {
+                // Toda entrada parte de las preferencias guardadas y toda
+                // salida (Volver, pestaña o gesto atrás) descarta lo no
+                // guardado: el tema y el resto de la aplicación conservan
+                // siempre la última selección confirmada con Guardar.
+                LaunchedEffect(Unit) { profileViewModel.editAppearance() }
+                DisposableEffect(Unit) { onDispose { profileViewModel.discardAppearance() } }
                 AppearanceScreen(
                     profileState, profileViewModel::updateAppearance, profileViewModel::saveAppearance,
                     onDiscard = { profileViewModel.discardAppearance(); navController.popBackStack() },

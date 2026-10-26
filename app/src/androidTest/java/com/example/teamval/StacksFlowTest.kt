@@ -2,6 +2,7 @@ package com.example.teamval
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasClickAction
@@ -9,11 +10,13 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isPopup
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextInput
 import org.junit.Rule
@@ -24,8 +27,15 @@ class StacksFlowTest {
     val compose = createAndroidComposeRule<MainActivity>()
 
     private fun openStacks() {
-        compose.onNodeWithText("Descubrir Stacks").performScrollTo().performClick()
-        compose.onNodeWithText("Encuentra tu equipo").assertIsDisplayed()
+        compose.onNodeWithText("Encontrar compañeros").performScrollTo().performClick()
+        compose.onNode(hasText("Buscar equipo") and hasAnyAncestor(hasTestTag("stack_explorer"))).assertIsDisplayed()
+    }
+
+    /** Las snackbars de éxito tapan el final de la pantalla: esperamos a que se retiren. */
+    private fun waitUntilNoSnackbar() {
+        compose.waitUntil(8_000) {
+            compose.onAllNodesWithTag("snackbar_content").fetchSemanticsNodes().isEmpty()
+        }
     }
 
     private fun choose(current: String, option: String) {
@@ -55,6 +65,92 @@ class StacksFlowTest {
         compose.onNodeWithText("5 publicaciones").assertIsDisplayed()
     }
 
+    /**
+     * Las pestañas de grupo son un elemento más del listado: ya no son una
+     * cabecera fija, porque un elemento fijo necesita un fondo opaco que
+     * oculte las publicaciones al desplazar y ese fondo era justo el
+     * rectángulo que había que eliminar. Al integrarse en el listado pueden
+     * quedar fuera de composición y no existir en el árbol de semántica, así
+     * que se vuelve al inicio antes de tocarlas. Lo que se comprueba aquí es
+     * el cambio de grupo y la ausencia del panel de filtros, no la posición.
+     */
+    private fun scrollToCategoryTabs() {
+        compose.onNodeWithTag("stack_explorer").performScrollToIndex(0)
+    }
+
+    @Test
+    fun categoryTabsSwitchGroupsWithoutOpeningFilters() {
+        openStacks()
+        // Sin pestaña activa se ven todas las categorías: 5 publicaciones ajenas.
+        compose.onNodeWithTag("stack_explorer").performScrollToNode(hasText("5 publicaciones"))
+        compose.onNodeWithText("5 publicaciones").assertIsDisplayed()
+        // Cambiar a Dúo no abre el panel de filtros.
+        scrollToCategoryTabs()
+        compose.onNodeWithTag("category_Duo").performScrollTo().performClick()
+        compose.onNodeWithTag("stack_filters").assertDoesNotExist()
+        compose.onNodeWithTag("stack_explorer").performScrollToNode(hasText("2 publicaciones"))
+        compose.onNodeWithText("2 publicaciones").assertIsDisplayed()
+        scrollToCategoryTabs()
+        compose.onNodeWithTag("category_Duo").assertIsSelected()
+        // Integrantes actuales, cupos y aportación al equipo de 5 quedan diferenciados.
+        compose.onNodeWithTag("stack_explorer").performScrollToNode(hasText("Un dúo con buena comunicación"))
+        compose.onNode(
+            hasText("Integrantes: 1 de 2") and hasAnyAncestor(hasTestTag("post-demo-duo"))
+        ).assertExists()
+        compose.onNode(
+            hasText("1 cupo disponible") and hasAnyAncestor(hasTestTag("post-demo-duo"))
+        ).assertExists()
+        compose.onNode(
+            hasText("Este grupo cubre 2 de 5 jugadores y quedan 3 fuera para completar el equipo.") and
+                hasAnyAncestor(hasTestTag("post-demo-duo"))
+        ).assertExists()
+        compose.onNodeWithTag("stack_explorer").performScrollToNode(hasText("Stack completo"))
+        compose.onNodeWithText("Stack completo").assertExists()
+        // Trío: solo la publicación ajena de 3 (la propia queda en «Mis publicaciones»).
+        scrollToCategoryTabs()
+        compose.onNodeWithTag("category_Trio").performScrollTo().performClick()
+        compose.onNodeWithTag("stack_explorer").performScrollToNode(hasText("1 publicación"))
+        compose.onNodeWithText("1 publicación").assertIsDisplayed()
+        // Stack: grupos de 4 y 5 jugadores.
+        scrollToCategoryTabs()
+        compose.onNodeWithTag("category_Stack").performScrollTo().performClick()
+        compose.onNodeWithTag("stack_explorer").performScrollToNode(hasText("2 publicaciones"))
+        compose.onNodeWithText("2 publicaciones").assertIsDisplayed()
+        compose.onNode(
+            hasText("Integrantes: 3 de 5") and hasAnyAncestor(hasTestTag("post-demo-night"))
+        ).assertExists()
+        compose.onNode(
+            hasText("2 cupos disponibles") and hasAnyAncestor(hasTestTag("post-demo-night"))
+        ).assertExists()
+        compose.onNode(
+            hasText("Este grupo ya cubre los 5 jugadores del equipo") and
+                hasAnyAncestor(hasTestTag("post-demo-night"))
+        ).assertExists()
+        // La selección sobrevive a la recreación de la actividad.
+        compose.activityRule.scenario.recreate()
+        scrollToCategoryTabs()
+        compose.onNodeWithTag("category_Stack").assertIsSelected()
+        // Volver a pulsar la pestaña activa muestra todos los grupos.
+        compose.onNodeWithTag("category_Stack").performScrollTo().performClick()
+        compose.onNodeWithTag("stack_explorer").performScrollToNode(hasText("5 publicaciones"))
+        compose.onNodeWithText("5 publicaciones").assertIsDisplayed()
+        // Los filtros adicionales siguen disponibles y se combinan con la categoría.
+        compose.onNodeWithText("Filtrar stacks").performScrollTo().performClick()
+        compose.onNodeWithTag("stack_filters").assertExists()
+        choose("Todas las regiones", "LATAM Sur")
+        scrollToCategoryTabs()
+        compose.onNodeWithTag("category_Duo").performScrollTo().performClick()
+        compose.onNodeWithTag("stack_explorer").performScrollToNode(hasText("1 publicación"))
+        compose.onNodeWithText("1 publicación").assertIsDisplayed()
+        compose.onNode(hasText("Limpiar filtros") and hasAnyAncestor(hasTestTag("stack_filters"))).performScrollTo().performClick()
+        compose.onNodeWithTag("stack_explorer").performScrollToNode(hasText("2 publicaciones"))
+        compose.onNodeWithText("2 publicaciones").assertIsDisplayed()
+        scrollToCategoryTabs()
+        compose.onNodeWithTag("category_Duo").performScrollTo().performClick()
+        compose.onNodeWithTag("stack_explorer").performScrollToNode(hasText("5 publicaciones"))
+        compose.onNodeWithText("5 publicaciones").assertIsDisplayed()
+    }
+
     @Test
     fun createValidateRestoreDraftAndManageSimulatedRequests() {
         openStacks()
@@ -69,6 +165,7 @@ class StacksFlowTest {
         compose.onNodeWithTag("publish_stack").performScrollTo().performClick()
         compose.onNodeWithTag("stack_explorer").performScrollToNode(hasText("Equipo de prueba"))
         compose.onNodeWithText("Equipo de prueba").assertIsDisplayed()
+        waitUntilNoSnackbar()
         compose.onNodeWithText("Gestionar solicitudes (0 pendientes)").performScrollTo().performClick()
         compose.onNodeWithText("Simular solicitud").performClick()
         compose.onNodeWithTag("stack_requests").performScrollToNode(hasText("Aceptar"))
@@ -92,7 +189,7 @@ class StacksFlowTest {
         compose.onNode(hasText("Solicitar unirme") and hasAnyAncestor(hasTestTag("post-demo-duo"))).performClick()
         compose.onNodeWithText("Solicitud pendiente").assertIsNotEnabled()
         compose.onNodeWithText("Inicio").performClick()
-        compose.onNodeWithText("Descubrir Stacks").performScrollTo().performClick()
+        compose.onNodeWithText("Encontrar compañeros").performScrollTo().performClick()
         compose.onNodeWithTag("stack_explorer").performScrollToNode(hasText("Solicitudes"))
         compose.onNodeWithText("Solicitudes").performClick()
         compose.onNodeWithText("Enviadas").performClick()

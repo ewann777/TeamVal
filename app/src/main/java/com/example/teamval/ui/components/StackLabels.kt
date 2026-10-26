@@ -5,6 +5,7 @@ import com.example.teamval.R
 import com.example.teamval.domain.model.GameMode
 import com.example.teamval.domain.model.Region
 import com.example.teamval.domain.model.RequestStatus
+import com.example.teamval.domain.model.StackCategory
 import com.example.teamval.domain.model.ValorantRank
 import com.example.teamval.domain.repository.StackError
 
@@ -40,6 +41,13 @@ val GameMode.labelRes: Int
         GameMode.Swiftplay -> R.string.mode_swiftplay
         GameMode.SpikeRush -> R.string.mode_spike_rush
         GameMode.TeamDeathmatch -> R.string.mode_team_deathmatch
+    }
+
+val StackCategory.labelRes: Int
+    @StringRes get() = when (this) {
+        StackCategory.Duo -> R.string.stack_tab_duo
+        StackCategory.Trio -> R.string.stack_tab_trio
+        StackCategory.Stack -> R.string.stack_tab_stack
     }
 
 val RequestStatus.labelRes: Int

@@ -7,8 +7,10 @@ en la etapa solicitada, verificar su resultado, actualizar la documentación y
 detenerse. No iniciar automáticamente la siguiente etapa.
 
 El orden definitivo acordado con el usuario es el siguiente. La etapa 5 está
-completada. Se autoriza únicamente el bloque A refinado de la etapa 5.5;
-cualquier otro bloque requiere una nueva petición.
+completada. El bloque A de 5.5 está guardado en `90e3ef9`; el bloque B (Buscar
+equipo) y las mejoras posteriores se agrupan en la entrega v0.5.6. El registro
+de cierre al final distingue las verificaciones históricas de los resultados
+actuales. Cualquier implementación posterior requiere una nueva petición.
 
 ## Etapa 1 — Base visual y arquitectura
 
@@ -720,8 +722,8 @@ rojo/carbón/marfil y la tipografía Outfit + Exo 2 aplicadas de forma global.
 
 ### Pendientes documentales de este bloque
 
-- Commit de los cambios (pendiente de autorización; no se ha hecho `commit` ni
-  `push` de esta entrega).
+- Commit `90e3ef9` «TeamVal v0.5.5 - Etapa 5.5 Bloque A completado» (50 archivos)
+  autorizado, enviado a `origin/main` y con árbol limpio.
 - Auditoría manual de TalkBack y matriz adicional de dispositivos/tamaños de
   texto, como en etapas anteriores.
 
@@ -730,3 +732,565 @@ rojo/carbón/marfil y la tipografía Outfit + Exo 2 aplicadas de forma global.
 Selectores de rango, Premier, rango de perfiles y animaciones se mantienen fuera
 de esta entrega. Recursos pendientes: logo oficial y emblemas propios aprobados,
 integrables en BrandHeader/SectionIcon/drawables existentes. No se inicia otro bloque.
+
+## Etapa 5.5 — Bloque B: Buscar equipo
+
+**Estado: completada; compilación, Lint y pruebas unitarias/instrumentadas
+verificadas el 26/10/2026.**
+
+### Revisión inicial
+
+- Lectura de `PROJECT_SPEC.md`, de este roadmap y del código de stacks
+  existente: `StackModels.kt`, `StacksViewModel.kt`, `StackExplorerScreen.kt`,
+  `StackPostCard.kt`, `StackFiltersPanel.kt`, `StackCommon.kt`, `StackLabels.kt`,
+  `CreateStackScreen.kt`, `DemoStackData.kt`, `strings_stacks.xml` y las pruebas
+  de stacks. Git limpio al comenzar sobre el commit `90e3ef9` (bloque A enviado).
+- Se comprobó cómo se representaban los grupos hoy: solo `capacity` (2..5) y
+  `memberIds`, sin categoría, sin cupos explícitos en la tarjeta y sin distinción
+  entre «grupo actual» y «jugadores que se buscan».
+
+### Clasificación de grupos y casos ambiguos
+
+El tipo de grupo se deriva del tamaño objetivo `capacity` (ya validado entre 2 y
+5):
+
+- **Dúo = 2**, **Trío = 3**, **Stack = 4 o 5**. Caso ambiguo resuelto: un grupo
+  de 4 no es dúo ni trío, se agrupa como stack y la tarjeta indica «Este grupo
+  cubre 4 de 5 jugadores y queda 1 fuera para completar el equipo».
+- Tres cifras sin solape en cada tarjeta: **integrantes actuales**
+  (`memberIds.size`), **cupos disponibles** (`capacity - memberIds.size`) y
+  **jugadores que faltan para 5** (`5 - capacity`), de modo que siempre se cumple
+  `integrantes + cupos + faltantes = 5`.
+- Ejemplo: un dúo con 1 integrante ofrece 1 cupo y aún hacen falta 3 jugadores
+  fuera del dúo para tener 5; un stack de 5 con 3 integrantes ofrece 2 cupos y
+  no falta nadie fuera; un stack de 4 completo sigue sin cubrir cinco.
+
+### Entrega
+
+- Sección renombrada a **Buscar equipo** en barra inferior, cabecera, tarjeta de
+  inicio y CTA, conservando ruta, tags y etiquetas internas.
+- Tres pestañas horizontales **Dúo / Trío / Stack** en `stickyHeader` con fondo
+  sólido y filete: siempre visibles sobre las publicaciones y sin abrir el panel
+  de filtros. Sin pestaña activa se ve todo (comportamiento previo); pulsar la
+  activa vuelve a la vista completa y muestra una pista breve.
+- `StackSearch` combina categoría + filtros existentes (rango, región,
+  modalidad) + «Mis publicaciones» + publicaciones ajenas. `category` vive en
+  `StacksLocalState`, fuera de `StackFilters`, para no alterar `isActive` ni el
+  panel; sobrevive a la recreación de la actividad.
+- Tarjeta con badge de categoría, «Integrantes: X de Y», cinco plazas visuales
+  (ocupadas / libres / fuera del grupo) con leyenda accesible y cupos
+  disponibles. Rango, región y modo ya existentes se conservan. La aportación al
+  equipo de 5 va en un pie propio y acotado al grupo (ver «Corrección de
+  textos»).
+- Crear publicación: «N jugadores · Dúo/Trío/Stack» en el desplegable de tamaño
+  y resumen en vivo de plazas, cupos por cubrir y aportación al equipo de 5.
+- Estados vacíos diferenciados (filtros / categoría / propias / genérico) con la
+  acción «Ver todos los grupos» cuando la categoría vacía la lista. Al crear un
+  post se activa su pestaña y «Mis publicaciones» para que sea visible.
+- Renombrado también `home_action` a «Encontrar compañeros» para evitar
+  etiquetas duplicadas con el nuevo nombre de la sección.
+
+### Archivos
+
+Rutas Kotlin bajo `app/src/main/java/com/example/teamval/`:
+
+- Dominio: `domain/model/StackModels.kt` (`StackCategory`, `StackPost` con
+  `currentMembers`/`availableSlots`/`category`/`playersMissingForFullTeam` y
+  `StackSearch`).
+- UI: `ui/screens/stacks/StackExplorerScreen.kt`, `StacksViewModel.kt`,
+  `CreateStackScreen.kt`, `ui/components/StackPostCard.kt`, `StackLabels.kt` y
+  `navigation/TeamValNavHost.kt` (paso de `onCategoryChange`).
+- Recursos: `res/values/strings.xml` (nombre de sección y CTA),
+  `res/values/strings_stacks.xml` (pestañas, integrantes, cupos, faltantes,
+  estados vacíos y resumen de creación).
+- Pruebas: nueva `test/…/domain/model/StackSearchTest.kt` (3 pruebas),
+  `StacksFlowTest.kt` (nueva `categoryTabsSwitchGroupsWithoutOpeningFilters` y
+  adaptación de los textos renombrados) y `PersonalizationFlowTest.kt` (navegación
+  por tag `nav_stacks` en lugar del texto renombrado).
+- `PROJECT_SPEC.md` (sección 13) y este roadmap.
+
+### Corrección de textos (punto 5 del encargo)
+
+La redacción original «Faltan N jugadores para un equipo de 5» aparecía en la
+misma fila que «1 cupo disponible» y podía leerse como que la publicación
+buscaba N jugadores. Se acotó siempre al grupo y se separó visualmente:
+
+- `stack_missing_for_five` y `stack_covers_five` → `stack_team_coverage`
+  (plural según los que quedan fuera) y `stack_team_complete`: «Este grupo
+  cubre 2 de 5 jugadores y quedan 3 fuera para completar el equipo» / «Este
+  grupo ya cubre los 5 jugadores del equipo».
+- La frase baja a su propio pie (`bodySmall`, gris) fuera de la fila de cupos,
+  de modo que integrantes y cupos quedan como únicos datos de la publicación.
+- Leyenda accesible de las cinco plazas: «Plazas de un equipo de 5: a ocupadas
+  por integrantes, b libres por cupos y c fuera de este grupo».
+- `create_capacity_summary` pasa a plural y queda en dos frases con ámbito
+  explícito: «Tú ocupas 1 de N plazas; quedan C por cubrir. Este grupo cubre N
+  de 5 jugadores y quedan M fuera para completar el equipo».
+- `StacksFlowTest` actualizado con los textos nuevos y acotados a cada
+  publicación por su `testTag` (`post-demo-duo`, `post-demo-night`), ya que dos
+  publicaciones de la misma categoría comparten tamaño y por tanto la misma
+  frase.
+
+### Verificación
+
+Ejecutada el 26/10/2026 sobre Windows con `.\gradlew.bat`
+(`JAVA_HOME` = JBR de Android Studio), emulador Pixel_6 API 37:
+
+- `.\gradlew.bat :app:assembleDebug` → **BUILD SUCCESSFUL**.
+- `.\gradlew.bat :app:testDebugUnitTest` → **BUILD SUCCESSFUL**,
+  **103 pruebas, 0 fallos, 0 omitidas** (2.417 s). Informe:
+  `app/build/reports/tests/testDebugUnitTest/index.html`.
+- `.\gradlew.bat :app:lintDebug` → **BUILD SUCCESSFUL**, **0 errores y 8
+  avisos**; los 8 avisos son los preexistentes de dependencias/objetivos
+  (ninguno de este bloque). Informe: `app/build/reports/lint-results-debug.html`.
+- `.\gradlew.bat :app:connectedDebugAndroidTest` → **BUILD SUCCESSFUL (8 min
+  33 s)**, **36 pruebas, 0 fallos, 0 errores, 0 omitidas** en 10 suites:
+  `AppearanceIdentityTest` (2), `EconomyStorageTest` (2), `EconomyViewModelTest`
+  (3), `ExampleInstrumentedTest` (1), `PersonalizationFlowTest` (3),
+  `StacksFlowTest` (4), `Stage41FlowTest` (5), `Stage5FlowTest` (9),
+  `TeamFlowTest` (4), `TeamLogoStorageTest` (3). Resultado en
+  `app/build/outputs/androidTest-results/connected/debug/`.
+- La única anomalía observada durante el bloque fue un fallo intermitente de
+  `Stage41FlowTest#ratingFormEnforcesCommunityCommentRules` (snackbar que
+  intercepta el toque), ya conocido de etapas anteriores: al repetirlo aislado
+  pasó, y en las dos ejecuciones completas definitivas la batería salió 36/36.
+- Revisión visual en el emulador (1080×2400): portada → CTA «Encontrar
+  compañeros» → **Buscar equipo**; pestañas **Dúo → 2 publicaciones**,
+  **Trío → 1 publicación**, **Stack → 2 publicaciones**, **sin pestaña → 5
+  publicaciones**; la barra de pestañas queda fija sobre las publicaciones al
+  hacer scroll y no abre el panel de filtros; panel de filtros operativo con
+  «Ocultar filtros», los tres filtros previos (rango, región, modalidad) y
+  «Limpiar filtros», y combinación pestaña + filtro comprobada (Dúo + LATAM Sur
+  → 1 publicación); tarjeta de dúo con «Integrantes: 1 de 2», cinco plazas y «1
+  cupo disponible» + pie «Este grupo cubre 2 de 5 jugadores y quedan 3 fuera…»;
+  tarjeta de stack con «Integrantes: 3 de 5», «2 cupos disponibles» y «Este
+  grupo ya cubre los 5 jugadores del equipo»; creación con «2 jugadores · Dúo»
+  en el desplegable y el resumen de plazas/cupos en vivo.
+
+## Etapa 5.5 — Mejora de UX: Perfil y Apariencia
+
+**Estado: completada; compilación, Lint y pruebas verificadas el 26/10/2026.**
+
+### Revisión inicial
+
+- Lectura de `PROJECT_SPEC.md`, de este roadmap y de los archivos indicados:
+  `ProfileScreen.kt`, `AppearanceScreen.kt`, `Personalization.kt`, `Theme.kt`,
+  `Visuals.kt` y el repositorio de preferencias (`PreferencesRepository.kt` y
+  `LocalPreferencesRepository.kt`), más `AppBackdrop.kt`,
+  `CustomizationControls.kt`, `ProfileViewModel.kt` y las pruebas de apariencia.
+- **Causa real del problema de los fondos** (no eran «ajustes» sino dibujos
+  equivocados en `AppBackdrop`):
+  - `Plain` dibujaba **los mismos orbes de color** que `Aurora`, con alfa 0.12
+    (oscuro) y 0.08 (claro): «Liso» no era liso y se veía como una aurora.
+  - `Aurora` dibujaba dos círculos de color plano y solo aplicaba `Modifier.blur`
+    a su **borde** (API 31+): el interior ya era uniforme, de modo que tras el
+    difuminado se parecía a «Liso».
+  - `Grid` dibujaba una rejilla con alfa 0.07 (invisible a simple vista) más un
+    círculo de resplandor del acento: «Cuadrícula» se leía como una aurora
+    oscura.
+  - No había miniaturas: la opción era un chip de solo texto, así que no podía
+    representar fielmente lo que iba a aparecer.
+
+### 1. Sección Perfil
+
+- Desaparece el acceso directo **«Mi inventario»** de `ProfileScreen` (y su
+  parámetro `onOpenInventory` del nav host). El inventario **no se elimina**:
+  sigue disponible desde la tienda (`InventoryRoute`), con sus datos, su ruta y
+  su funcionalidad intactos; la cadena `profile_inventory` deja de existir porque
+  ya no tiene uso.
+- El acceso pasa a llamarse **«Apariencia de la aplicación»**
+  (`appearance_access_title`) con la descripción **«Colores, tema y fondo de
+  TeamVal»** (`appearance_access_hint`).
+- **«Editar perfil»** permanece independiente y operativo.
+
+### 2. Pantalla Apariencia: una sola sección de color y estilo
+
+- Se fusionan «Tu estilo, de un vistazo» y «Color de acento» (y se retira la
+  sección de vista previa con su botón «Aplicar apariencia», que duplicaba el
+  «Guardar» de la barra inferior) en **una única sección «Colores y estilo»**:
+  vista previa, presets existentes, tema de aplicación, chips de acento y campo
+  HEX.
+- La vista previa es un panel propio con «VISTA PREVIA EN VIVO», el título de
+  muestra en el color de acento y la nota tipográfica; además la preferencia sin
+  guardar se aplica a toda la aplicación, de modo que el fondo real también se
+  previsualiza al instante.
+- El botón **«Restablecer valores predeterminados»** se conserva (antes decía
+  «Restablecer lavanda y carbón», texto desactualizado desde el bloque A).
+- Las preferencias guardadas no se pierden: solo cambia la composición.
+
+### 3. Fondos: Liso, Aurora y Estrellas
+
+- `AppBackground` queda **`Plain`, `Aurora`, `Stars`**; se elimina la opción
+  **Cuadrícula**. Migración segura y de solo lectura en
+  `LocalPreferencesRepository.backgroundOrDefault`: el valor guardado `Grid` se
+  lee como `Stars` (sigue siendo un fondo decorado válido) y cualquier valor
+  desconocido vuelve a `Plain`; no se escribe ni se resetea nada guardado.
+- `AppBackgroundView` es la **única implementación** del fondo, compartida por la
+  aplicación (`AppBackdrop`) y por las miniaturas de selección, así que una
+  miniatura no puede mentir:
+  - **Liso**: color uniforme del tema, sin orbes, rejillas ni degradados.
+  - **Aurora**: cuatro resplandores radiales con degradado suave hasta
+    transparente, derivados del acento activo (tono principal, ±45° y
+    complementario), visibles en ambos temas y rebajados en claro para no
+    perjudicar la lectura. Sin animación, para no costar batería.
+  - **Estrellas**: hasta 1500 estrellas pequeñas con distribución estable (semilla
+    fija, dibujadas una sola vez) y sutiles diferencias de tamaño y brillo, sobre
+    el fondo adaptado al tema (oscuro en oscuro; en claro, estrellas de tinta
+    sobre el color claro) para no romper el contraste del texto directo.
+- La pantalla de apariencia muestra las tres opciones como **tarjetas con
+  miniatura** (108×64 dp), borde y marca de selección, con tags
+  `background_<Nombre>` y `background_thumb_<Nombre>`.
+- El preset **«Azul / carbón»** y el cosmético «Aqualux» de la tienda pasan su
+  fondo de `Grid` a `Stars` (`CosmeticBindings`): es el único punto de la tienda
+  tocado, y solo por el renombrado del enum.
+
+### 4. Tipografía
+
+- La interfaz **no ofrece selector de fuentes**: se retiran la sección, sus chips
+  y sus cadenas (`appearance_font`, `font_modern`, `font_editorial`,
+  `font_mono`, `font_gaming`, `font_sample`).
+- `teamValTypography` define el estilo único **«Moderno»: Outfit para cuerpo y
+  Exo 2 para títulos** (`AppFont.Modern` y el valor histórico `AppFont.Gaming`
+  comparten familia) y conserva la correspondencia heredada de `Editorial`/`Mono`
+  para no romper preferencias antiguas.
+- El valor por defecto de `AppAppearance.font` pasa a `AppFont.Modern`; el enum,
+  los TTF y las licencias de `assets/licenses/` **no se borran** (compatibilidad y
+  requisitos de la SIL OFL, cuya nota se muestra además en la vista previa).
+- Decisión: **no se reescribe el valor guardado de fuente**. Normalizarlo en la
+  lectura rompería la comparación de `VisualThemePresets.matches` y haría que el
+  cosmético «Aqualux» de la tienda apareciera como no equipado; además la interfaz
+  ya no permite elegir otra cosa, así que «solo un estilo» se cumple en pantalla
+  sin tocar datos ni tienda.
+
+### 5. Guardado y confirmación
+
+- El guardado sigue siendo persistente (DataStore). El ViewModel distingue
+  ahora entre mensaje de éxito y de error (`messageIsError`): al guardar la
+  apariencia se muestra **«¡Apariencia actualizada!»** (`appearance_updated`) y
+  al guardar el perfil **«Cambios guardados en este dispositivo.»**.
+- La confirmación es una tira con borde y color de acento que entra con una
+  animación breve (`AnimatedVisibility`) y **solo aparece tras guardar
+  correctamente**; cualquier modificación posterior la retira. Los errores de
+  validación o de guardado se pintan en color de error para no confundirse con
+  éxito.
+
+### Archivos
+
+Rutas bajo `app/src/main/java/com/example/teamval/` salvo donde se indica:
+
+- Dominio: `domain/model/Personalization.kt` (`AppBackground.Stars`, fondo del
+  preset BlueCharcoal, documentación de los enums) y
+  `domain/model/CosmeticBindings.kt`.
+- Datos: `data/repository/LocalPreferencesRepository.kt` (migración `Grid`→`Stars`).
+- Tema: `ui/theme/Type.kt` (estilo Moderno = Outfit + Exo 2) y `ui/theme/Color.kt`
+  (`hueShift`, tonos vecinos de la aurora).
+- UI: `ui/components/AppBackdrop.kt` (reescrito: `AppBackgroundView`, aurora y
+  campo de estrellas), `ui/components/CustomizationControls.kt` (tira de
+  confirmación animada), `ui/components/ProfileLabels.kt`,
+  `ui/screens/profile/ProfileScreen.kt`, `AppearanceScreen.kt`,
+  `EditProfileScreen.kt`, `ProfileViewModel.kt` y `navigation/TeamValNavHost.kt`.
+- Recursos: `res/values/strings_profile.xml` (acceso, confirmación, colores y
+  estilo, Estrellas; retiro de cadenas sin uso), `res/values/strings_appearance.xml`
+  (descripción del acceso y pista de presets) y `res/values/strings_shop.xml`.
+- Pruebas: `LocalPreferencesRepositoryTest` (migración y estilo por defecto),
+  `PersonalizationThemeTest` (tipografía Moderno y nueva de `hueShift`),
+  `PersonalizationFlowTest` (acceso renombrado, fondo por tag, confirmación nueva
+  y ausencia del selector de fuentes), `AppearanceIdentityTest` (confirmación
+  nueva) y la nueva `AppearanceBackgroundsTest` (2 pruebas sobre píxeles).
+- `PROJECT_SPEC.md` (sección 14) y este roadmap.
+
+### Verificación
+
+Ejecutada el 26/10/2026 con `.\gradlew.bat` sobre el emulador Pixel_6 (API 37):
+
+- `:app:assembleDebug` → **BUILD SUCCESSFUL** (compila sin errores).
+- `:app:testDebugUnitTest` → **104 pruebas, 0 fallos, 0 omitidas** en 14 suites
+  (incluye la nueva de `hueShift` y las de migración `Grid`→`Stars` y estilo
+  por defecto «Moderno»).
+- `:app:lintDebug` → **0 errores, 8 avisos** (los 8 son preexistentes de
+  dependencias: 7 `GradleDependency` y 1 `NewerVersionAvailable`).
+- `:app:connectedDebugAndroidTest` → **BUILD SUCCESSFUL (6 min 57 s)**,
+  **38 pruebas, 0 fallos, 0 errores, 0 omitidas** en 11 suites:
+  `AppearanceBackgroundsTest` (2, nuevas), `AppearanceIdentityTest` (2),
+  `EconomyStorageTest` (2), `EconomyViewModelTest` (3), `ExampleInstrumentedTest`
+  (1), `PersonalizationFlowTest` (3), `StacksFlowTest` (4), `Stage41FlowTest` (5),
+  `Stage5FlowTest` (9), `TeamFlowTest` (4), `TeamLogoStorageTest` (3).
+
+#### Comprobación de que los tres fondos se distinguen de verdad
+
+- **Automática**: `AppearanceBackgroundsTest` recorta el centro de cada miniatura
+  y mide píxeles: Liso con varianza < 0,0005 (color plano), Aurora con varianza
+  claramente mayor y sin destellos puntuales (degradado suave), Estrellas con
+  más de 5× los destellos de Liso/Aurora (puntos pequeños) y diferencia media
+  entre cada pareja de miniaturas; además verifica que la vista previa no escribe
+  hasta «Guardar» y que la selección persiste tras recrear la actividad.
+- **Manual, sobre capturas reales del emulador** (mismo código que las
+  miniaturas):
+  - Liso: luminancia de fondo **0,0092 constante** (mín = máx) en toda la zona
+    muestreada: sin orbes ni degradados.
+  - Aurora: fondo **0,06–0,15** con transiciones suaves (p. ej. tira superior
+    0,057 → 0,087) y ningún salto brusco: se ve como degradado luminoso.
+  - Estrellas: base **0,009** con puntitos de hasta **0,93**: campo granulado
+    netamente distinto de la aurora.
+- **Persistencia**: tras «Guardar», selección y preferencia sobreviven a
+  recrear la actividad (prueba automatizada) y a reiniciar la aplicación.
+- **Lectura del texto sobre el fondo**: el texto directo (`#C4CDD5`,
+  luminancia 0,60) queda en **≥11:1** sobre Liso y Estrellas y en torno a
+  **5:1** sobre la aurora, bajando hasta ≈3,3:1 en la zona más brillante del
+  resplandor. La aurora se mantiene intencionadamente «luminosa» por encargo;
+  si se prefiere más suave, basta con rebajar `strength` en
+  `AppBackdrop.drawAurora`.
+- **Revisión visual en el emulador**: Perfil sin «Mi inventario» y con el acceso
+  «Apariencia de la aplicación» + «Colores, tema y fondo de TeamVal»; pantalla de
+  apariencia con la sección «Colores y estilo», «Fondo de la aplicación» con las
+  tres miniaturas fieles y la tira «¡Apariencia actualizada!» tras guardar;
+  Inicio con los tres fondos comprobados uno a uno.
+- Nota del entorno: el emulador pierde la conexión `adb` con cierta
+  frecuencia (se reinició durante la ejecución) y muestra el diálogo del sistema
+  «Android App Compatibility / 16 KB» al arrancar; no afecta a la aplicación.
+
+## Etapa 5.6 — Correcciones visuales: tema, Estrellas y pestañas
+
+### Revisión inicial
+
+Investigación previa a tocar código, sobre la app instalada en el emulador
+(Pixel_6, API 37) y sobre el árbol de fuentes:
+
+- **Tema**: `AppAppearance.mode` llega a `TeamValTheme`, que decide el modo con
+  `when (appearance.mode)` (`Dark` → true, `Light` → false, `System` →
+  `isSystemInDarkTheme()`) y construye el esquema con
+  `teamValColorScheme(appearance, dark)`. `TeamValApp` aplica la preferencia
+  **sin guardar** solo mientras la pestaña actual es `AppearanceRoute`
+  (`preview = appearanceDraft.takeIf { ... }`), es decir, la vista previa ya
+  era en vivo y «Guardar» escribía en DataStore.
+- **Medición del problema**: con el mismo flujo se midieron las luminancias
+  medias de la pantalla: Oscuro **56**, Claro **232**, Sistema con el
+  dispositivo oscuro **41** y Sistema con el dispositivo claro **235**. El
+  cambio sí se aplicaba, pero el selector de tema quedaba **por debajo del
+  pliegue** (había que desplazar para verlo) y la entrada y salida de la
+  pantalla no reseteaban el borrador: al volver desde otra pestaña podía
+  persistir un borrador sin guardar y el mensaje «¡Apariencia actualizada!»
+  de una guardada anterior.
+- **Estrellas**: `drawStarField` calculaba el número de puntos a partir de la
+  retícula con un mínimo forzado de 70 y un tope de 1500, los colocaba con
+  `Random` puro (racimos) y usaba el mismo tinte en ambos temas
+  (`#1E2B3A` en claro) con opacidad hasta 1,0: en tema claro eran **puntos
+  negros** y en general un campo de ruido.
+- **Pestañas**: el `stickyHeader` pintaba `Modifier.background(colors.background)`
+  (color plano del tema) y tapaba el fondo real: con Aurora o Estrellas
+  detrás se veía como un **rectángulo casi negro**. Además eran tres chips
+  pequeños y se mostraba el texto permanente «Pulsa la pestaña activa…».
+- **Colores fijos**: no hay colores hardcodeados en títulos, subtítulos,
+  tarjetas, botones ni navegación inferior. Los únicos valores fijos son
+  ilustraciones de marca (tarjeta de perfil, avatares, decoraciones, marcos de
+  logo) que llevan texto blanco sobre degradados oscuros propios.
+
+### 1. Selección de tema (punto 1 del encargo)
+
+- El grupo «Tema de aplicación» sube al principio de «Colores y estilo», justo
+  después de la vista previa: se ve sin desplazar nada más abrir la pantalla,
+  y los presets de abajo ya no pueden cambiar el tema de forma inesperada
+  sin que se note arriba.
+- `composable(AppearanceRoute)` ahora hace `LaunchedEffect { editAppearance() }`
+  al entrar y `DisposableEffect { onDispose { discardAppearance() } }` al
+  salir: toda entrada parte de las preferencias guardadas y **toda salida**
+  (Volver, pestaña o gesto atrás) descarta lo no guardado, incluido el
+  mensaje de confirmación antiguo.
+- Sin cambios en `Theme.kt`: Oscuro y Claro siguen derivando del mismo
+  `teamValColorScheme` y Sistema sigue a `isSystemInDarkTheme()`.
+
+### 2. Fondo Estrellas (punto 2 del encargo)
+
+- Retícula de 15 dp con desplazamiento aleatorio por celda y descarte del 67 %
+  de las celdas: **~530 estrellas** por pantalla completa (antes hasta 1500),
+  sin racimos porque nunca caben dos en la misma celda.
+- Radio de 0,65 a 1,7 dp (≈1,5 a 4,5 px) y solo el 18 % son «brillantes», con
+  halo suave de radio ×2,8 y opacidad ×0,25.
+- **Modo claro**: tinta azul pizarra `#33465C` con opacidad 0,12–0,36: tenues
+  y elegantes, nunca puntos negros.
+- **Modo oscuro**: marfil `#FFF6E6`, azul claro `#DCEBFF` y blanco, opacidad
+  0,28–0,92.
+- Siguen siendo deterministas (semilla `0x57415253`), estáticas y se dibujan
+  una sola vez. Las tarjetas y campos siguen ocultándolas porque el vidrio
+  cubre con 0,92–0,96 de opacidad.
+
+### 3. Pestañas Dúo / Trío / Stack (punto 3 del encargo)
+
+**Primer intento: insuficiente.** Se sustituyó el plano
+`Modifier.background(colors.background)` por
+`colors.surfaceContainerHigh.copy(alpha = 0.97f)`. El bloque dejó de ser casi
+negro y pasó a ser azul grisáceo, pero **seguía siendo un rectángulo visible**
+delante del fondo: no resolvía el problema, solo lo recoloreaba.
+
+**Corrección definitiva: se elimina el fondo por completo.**
+
+- `stickyHeader(key = "categories")` → `item(key = "categories")`.
+- Se elimina `.background(colors.surfaceContainerHigh.copy(alpha = 0.97f))`.
+- Se elimina el `HairlineDivider` que remataba el contenedor y su import,
+  que quedaba huérfano.
+
+Motivo de dejar de ser fija: un `stickyHeader` queda anclado y, sin un fondo
+opaco, las publicaciones se verían **por detrás** de los botones al
+desplazar; ese fondo opaco es precisamente el rectángulo que hay que quitar.
+Al integrar las pestañas como un `item` normal, la lista coloca cada
+elemento debajo del anterior y nunca hay solape, así que no hace falta cubrir
+nada y el hueco que rodea a los botones muestra exactamente el fondo real de
+la aplicación (Liso, Aurora o Estrellas), sin capas intermedias.
+
+Se conserva íntegro lo demás: los tres botones individuales (`weight(1f)`,
+46 dp de alto, esquinas de 18 dp, el activo con `colors.primary` y el texto
+`colors.onPrimary`, los inactivos con `colors.surface`, `colors.onSurface` y
+filete `colors.outlineVariant`), la deselección al pulsar la pestaña activa,
+el botón «Ver todos los grupos» del estado vacío, los testTags `category_bar`
+y `category_<Categoría>`, y toda la lógica de búsqueda y filtros.
+
+**Adaptación de la prueba** (requisito modificado, no debilitamiento):
+`StacksFlowTest.categoryTabsSwitchGroupsWithoutOpeningFilters` desplazaba
+hondo en la lista («Stack completo») y después pulsaba una pestaña con
+`performScrollTo()`. Al dejar de ser un elemento fijo, la pestaña ya no está
+compuesta a ese desplazamiento y el árbol de semántica no la contiene, por lo
+que la acción fallaba con «could not find any node». Se añade el auxiliar
+`scrollToCategoryTabs()` (`performScrollToIndex(0)`) que vuelve al inicio
+del listado antes de cada interacción con las pestañas. **Ninguna aserción
+cambia**: siguen verificándose el cambio de grupo, el recuento de
+publicaciones, que no se abre el panel de filtros, que la selección sobrevive
+a la recreación de la actividad y que pulsar la pestaña activa deselecciona.
+
+### 4. Legibilidad y consistencia (punto 4 del encargo)
+
+- Revisadas en Oscuro y Claro: Inicio, Buscar equipo, Scrims, Tienda y
+  Perfil, más la navegación inferior. Títulos, subtítulos, tarjetas, botones
+  y barra inferior usan `MaterialTheme.colorScheme` / `LocalTeamValVisuals`;
+  no se ha introducido ningún color fijo.
+- El único cambio de contraste deliberado son las estrellas en modo claro
+  (opacidad máxima 0,36), pensadas para no competir con el texto.
+
+### Archivos
+
+- `app/src/main/java/com/example/teamval/ui/components/AppBackdrop.kt`
+  (`drawStarField` rehecha).
+- `app/src/main/java/com/example/teamval/ui/screens/stacks/StackExplorerScreen.kt`
+  (pestañas como `item` sin fondo ni filete; se retiró el texto permanente).
+- `app/src/main/java/com/example/teamval/ui/screens/profile/AppearanceScreen.kt`
+  (grupo de tema al principio).
+- `app/src/main/java/com/example/teamval/navigation/TeamValNavHost.kt`
+  (entrada/salida limpias de Apariencia).
+- `app/src/main/res/values/strings_stacks.xml` (eliminado `stack_category_hint`).
+- `app/src/androidTest/java/com/example/teamval/AppearanceBackgroundsTest.kt`
+  (métricas de píxeles acordes al nuevo campo escaso).
+- `app/src/androidTest/java/com/example/teamval/StacksFlowTest.kt`
+  (auxiliar de desplazamiento hacia las pestañas).
+
+### Verificación
+
+#### Eliminación del rectángulo: medición sobre captura real
+
+Con el emulador en **Buscar equipo** y fondo **Aurora** (el caso más exigente,
+por ser un degradado continuo), se muestreó una columna vertical por el hueco
+exacto entre los botones Dúo y Trío (x = 372) recorriendo toda la altura de
+la fila (y = 831 a 944):
+
+| y | RGB en el hueco |
+| --- | --- |
+| 700 | 87, 69, 69 |
+| 831 | 87, 85, 77 |
+| 890 | 86, 88, 78 |
+| 944 | 86, 95, 79 |
+| 1010 | 85, 100, 83 |
+
+El degradado cambia de forma **suave y continua** a través de la fila de
+botones, sin escalón ni banda, mientras que en el centro del botón Dúo
+(x = 214) se lee su relleno `21, 33, 45`. Los tres botones tienen ancho
+idéntico (304 px).
+
+Con **Claro + Estrellas**, la densidad de píxeles de estrella en el mismo
+hueco (9,6 %) queda dentro del rango natural de las zonas libres adyacentes
+(12,1 % por encima y 7,4 % por debajo): el campo de estrellas continúa por
+detrás de los botones, sin hueco en blanco ni rectángulo.
+
+Se comprobó también el desplazamiento: las pestañas se integran en el listado
+y salen de pantalla sin solapes ni artefactos, y al pulsar Dúo se filtra a
+«2 publicaciones» sin abrir el panel de filtros.
+
+## Cierre de versión v0.5.6 — 26/10/2026
+
+### Revisión de los avances
+
+- Base Git comprobada: `main` y `origin/main` en `90e3ef9` antes de esta entrega.
+  Buscar equipo, Perfil/Apariencia y las correcciones visuales estaban pendientes
+  de commit; la mención inicial de que B ya estaba enviado era incorrecta.
+- Revisados los 33 archivos pendientes (incluidas las dos pruebas nuevas), sus
+  integraciones, preferencias compatibles, recursos y cambios de aserciones.
+  No se encontraron errores críticos ni implementaciones a medias. No se eliminó,
+  desactivó ni debilitó ninguna prueba durante este cierre.
+- Aprobación visual del usuario: eliminación definitiva del rectángulo detrás de
+  Dúo/Trío/Stack. Se conserva el diseño aprobado, con pestañas dentro del listado.
+- `git diff --check` correcto. Revisión de archivos y búsqueda de credenciales sin
+  hallazgos: no se incorporan claves, contraseñas, `local.properties`, almacenes de
+  firma, capturas, logs ni temporales. Los informes permanecen en `app/build/`, ignorado.
+
+### Compilación, unitarias y Lint de este cierre
+
+Con el JBR de Android Studio:
+
+```powershell
+.\gradlew.bat :app:assembleDebug :app:assembleDebugAndroidTest :app:testDebugUnitTest :app:lintDebug --console=plain
+```
+
+- **BUILD SUCCESSFUL** (48 s); APK debug y APK de instrumentación correctos.
+- **104 pruebas unitarias, 0 fallos, 0 errores, 0 omitidas**, en 14 suites.
+- **Lint: 0 errores, 8 avisos** de dependencias (7 `GradleDependency`,
+  1 `NewerVersionAvailable`), preexistentes. El JDK también avisa del uso
+  obsoleto de `sun.misc.Unsafe` por protobuf/DataStore; no impidió las pruebas.
+
+### Auditoría de instrumentación anterior
+
+Los 36/36 y 38/38 documentados arriba son registros históricos, no el resultado
+de una batería completa sobre la última corrección visual.
+
+- La salida conservada de la ejecución general posterior registra **36 casos,
+  3 fallos**: `Stage5FlowTest#test04_inventoryShowsStatesAndEquipsItems` y
+  `#test07_premiumIsPreviewOnlyAndUnownedVariantsStayLocked` por caída del proceso
+  de instrumentación; `#test09_profileRewardAndBundleKeepExactBalanceAndOwnership`
+  por no encontrar «Reclamada». No se contabilizan como éxito los casos ausentes.
+- La reejecución anterior de **Stage5FlowTest pasó 9/9**, sin fallos ni omitidos
+  (XML con fecha `2026-10-26T06:53:47`, salida 0). Esos tres casos ya estaban
+  resueltos por reejecución; no se vuelven a ejecutar en este cierre.
+- El último XML disponible antes del cierre, `2026-10-26T07:00:12`, contenía
+  **AppearanceBackgroundsTest: 1 correcto y 1 fallo**: pasó
+  `theThreeBackgroundsDifferAndTheirThumbnailsAreFaithful`; cayó el proceso en
+  `starsSelectionPersistsAfterRecreatingTheActivity`.
+- Los logcat muestran además abortos nativos del servicio del emulador
+  `android.hardware.uwb-service`. Esto acredita inestabilidad del entorno, pero
+  no demuestra por sí solo la causa de cada caída de instrumentación.
+- Evidencias previas preservadas en `app/build/reports/v056-review/`:
+  `previous-suite-summary.txt`, `previous-stage5-rerun.txt` y
+  `previous-backgrounds.xml`. Los XML generales originales fueron sobrescritos
+  por las ejecuciones focalizadas; no se inventa un informe completo ausente.
+
+Se reejecuta únicamente el caso pendiente, una vez, en Pixel_6/API 37 y con el
+Orchestrator existente (sin modificar pruebas ni configuración):
+
+```powershell
+.\gradlew.bat :app:connectedDebugAndroidTest '-Pandroid.testInstrumentationRunnerArguments.class=com.example.teamval.AppearanceBackgroundsTest#starsSelectionPersistsAfterRecreatingTheActivity' --console=plain
+```
+
+- **Resultado: BUILD SUCCESSFUL (32 s), 1/1 correcto**, 0 fallos, errores u
+  omitidos; caso de 18,184 s, XML `2026-10-26T07:09:42` conservado en
+  `app/build/reports/v056-review/rerun-stars-persistence.xml`.
+- No quedan casos fallidos identificados pendientes de reejecución. **No se
+  declara aprobada una batería completa actual de 38/38**: la ejecución general
+  tuvo fallos y se recuperaron casos mediante ejecuciones separadas. Una nueva
+  ejecución integral estable queda pendiente; no se repite ahora por instrucción
+  del usuario de ejecutar únicamente lo pendiente y evitar ciclos de reintentos.
+- Revisión satisfactoria para guardar los avances aprobados como
+  `TeamVal v0.5.6 - Buscar equipo y mejoras visuales`.
+
+### Próxima etapa: solo plan
+
+Propuesta detallada en `PROJECT_SPEC.md`, sección 16: seis marcos originales,
+precios orientativos de 200–800 TC, previsualización sobre el perfil real sin
+escrituras ni cobros, compra y equipado con los repositorios existentes, y
+Energía Suprema animado con alternativa estática. Catálogo, precios y diseños
+pendientes de aprobación. No se inicia implementación ni se modifica la tienda
+para esta propuesta; sin pagos reales ni recursos protegidos de Riot.

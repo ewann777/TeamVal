@@ -48,7 +48,8 @@ fun EditProfileScreen(
     onDiscard: () -> Unit
 ) {
     val profile = state.profileDraft ?: state.saved?.profile ?: return
-    CustomizationPage(stringResource(R.string.edit_profile), state.saving, state.messageRes, onDiscard, onSave) {
+    CustomizationPage(stringResource(R.string.edit_profile), state.saving, state.messageRes, onDiscard, onSave,
+        messageIsError = state.messageIsError) {
         ProfileHero(profile, Modifier.testTag("profile_preview"))
         SettingsSection(stringResource(R.string.profile_identity)) {
             OutlinedTextField(

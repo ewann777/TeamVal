@@ -34,13 +34,13 @@ class AppearanceIdentityTest {
         compose.onNodeWithTag("preset_Classic").performScrollTo().assertIsSelected()
         compose.onNodeWithTag("preset_ElegantLight").performScrollTo().performClick()
         compose.onNodeWithTag("save_preferences").performClick()
-        compose.waitUntil(10_000) { compose.onAllNodesWithText("Cambios guardados en este dispositivo.").fetchSemanticsNodes().isNotEmpty() }
+        compose.waitUntil(10_000) { compose.onAllNodesWithText("¡Apariencia actualizada!").fetchSemanticsNodes().isNotEmpty() }
         assertEquals(AppearancePreset.ElegantLight.apply(AppAppearance()), runBlocking { repository.preferences.first().appearance })
         compose.activityRule.scenario.recreate()
         compose.onNodeWithTag("preset_ElegantLight").performScrollTo().assertIsSelected()
         compose.onNodeWithText(compose.activity.getString(R.string.appearance_reset)).performScrollTo().performClick()
         compose.onNodeWithTag("save_preferences").performClick()
-        compose.waitUntil(10_000) { compose.onAllNodesWithText("Cambios guardados en este dispositivo.").fetchSemanticsNodes().isNotEmpty() }
+        compose.waitUntil(10_000) { compose.onAllNodesWithText("¡Apariencia actualizada!").fetchSemanticsNodes().isNotEmpty() }
         assertEquals(AppAppearance(), runBlocking { repository.preferences.first().appearance })
         compose.onNodeWithText("Volver").performClick()
         compose.onNodeWithTag("nav_home").performClick()

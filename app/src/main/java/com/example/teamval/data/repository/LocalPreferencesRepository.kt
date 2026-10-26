@@ -68,7 +68,7 @@ class LocalPreferencesRepository(private val store: DataStore<Preferences>) : Pr
         val appearance = AppAppearance(
             mode = enumOrDefault(values[Keys.mode], AppThemeMode.Dark),
             accentHex = values[Keys.accent]?.takeIf { AppAppearance(accentHex = it).isValid() } ?: defaults.accentHex,
-            background = enumOrDefault(values[Keys.appBackground], AppBackground.Plain),
+            background = backgroundOrDefault(values[Keys.appBackground]),
             font = enumOrDefault(values[Keys.font], defaults.font),
             palette = enumOrDefault(values[Keys.palette], defaults.palette)
         ).normalized()
@@ -109,4 +109,14 @@ class LocalPreferencesRepository(private val store: DataStore<Preferences>) : Pr
 
     private inline fun <reified T : Enum<T>> enumOrDefault(value: String?, default: T): T =
         enumValues<T>().find { it.name == value } ?: default
+
+    /**
+     * Lectura segura del fondo guardado. «Grid» (Cuadrícula) se retiró de la
+     * interfaz y se sustituyó por «Stars» (Estrellas), de modo que las
+     * preferencias antiguas siguen siendo un fondo decorado válido; cualquier
+     * otro valor desconocido vuelve al predeterminado. La migración es de solo
+     * lectura: no escribe ni resetea lo que hay guardado.
+     */
+    private fun backgroundOrDefault(value: String?): AppBackground =
+        enumOrDefault(if (value == "Grid") AppBackground.Stars.name else value, AppBackground.Plain)
 }

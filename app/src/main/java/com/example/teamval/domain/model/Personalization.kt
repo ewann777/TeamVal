@@ -11,7 +11,19 @@ enum class ProfilePet { None, Bruno, Nube }
 enum class ProfileCardStyle { Base, Especial, Cambio }
 enum class FavoriteAgent { Jett, Sage, Omen, Killjoy, Raze, Sova }
 enum class AppThemeMode { Dark, Light, System }
-enum class AppBackground { Plain, Aurora, Grid }
+
+/**
+ * Fondos de la aplicación. `Grid` se retiró de la interfaz y se sustituyó por
+ * `Stars`; el repositorio migra el valor guardado «Grid» a `Stars` para no
+ * romper preferencias antiguas (ver `LocalPreferencesRepository`).
+ */
+enum class AppBackground { Plain, Aurora, Stars }
+
+/**
+ * Valores históricos de tipografía. La interfaz ya no ofrece selector: el único
+ * estilo visible es el moderno (Outfit + Exo 2) y los identificadores se
+ * conservan para leer preferencias antiguas sin errores.
+ */
 enum class AppFont { Modern, Editorial, Mono, Gaming }
 enum class AppPalette { Classic, Legacy, Crimson, Ocean }
 enum class ProfileField { Name, Headline, Biography }
@@ -45,7 +57,8 @@ data class AppAppearance(
     val mode: AppThemeMode = AppThemeMode.Dark,
     val accentHex: String = "FF4655",
     val background: AppBackground = AppBackground.Plain,
-    val font: AppFont = AppFont.Gaming,
+    /** Estilo único visible (Outfit + Exo 2); los valores antiguos siguen válidos. */
+    val font: AppFont = AppFont.Modern,
     val palette: AppPalette = AppPalette.Classic
 ) {
     fun isValid(): Boolean = accentHex.removePrefix("#").matches(Regex("[0-9a-fA-F]{6}"))
@@ -60,7 +73,7 @@ enum class AppearancePreset {
         Classic -> AppAppearance(font = current.font)
         Premium -> current.copy(mode = AppThemeMode.Dark, accentHex = "C4B5FD", palette = AppPalette.Legacy, background = AppBackground.Aurora)
         IntenseRed -> current.copy(mode = AppThemeMode.Dark, accentHex = "FF4655", palette = AppPalette.Crimson, background = AppBackground.Aurora)
-        BlueCharcoal -> current.copy(mode = AppThemeMode.Dark, accentHex = "69C8FF", palette = AppPalette.Ocean, background = AppBackground.Grid)
+        BlueCharcoal -> current.copy(mode = AppThemeMode.Dark, accentHex = "69C8FF", palette = AppPalette.Ocean, background = AppBackground.Stars)
         ElegantLight -> current.copy(mode = AppThemeMode.Light, accentHex = "FF4655", palette = AppPalette.Classic, background = AppBackground.Plain)
     }
 

@@ -118,7 +118,6 @@
     <string name="shop_team_cosmetics_hint">Artículos de tu inventario aplicados a la identidad del equipo. Guardar exige ser capitán.</string>
     <string name="shop_equip_named" formatted="true">Equipar %1$s</string>
     <string name="shop_equipped_named" formatted="true">%1$s · Equipado</string>
-    <string name="profile_inventory">Mi inventario</string>
     <string name="home_balance_title">Tu saldo</string>
 
     <!-- Etiquetas de cosméticos (perfil) -->
