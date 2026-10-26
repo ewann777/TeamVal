@@ -3,6 +3,7 @@ package com.example.teamval.ui.components
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -71,6 +72,7 @@ fun TeamLogoView(
     }
     val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
+    val initialsStyle = MaterialTheme.typography.titleLarge
 
     Canvas(modifier.size(size)) {
         val dim = this.size.minDimension
@@ -78,7 +80,7 @@ fun TeamLogoView(
         if (usesImage) {
             drawLogoImage(image!!, logo.image!!, dim, density)
         } else {
-            drawBuiltin(logo.builtin, dim, textMeasurer, density)
+            drawBuiltin(logo.builtin, dim, textMeasurer, density, initialsStyle)
         }
     }
 }
@@ -110,7 +112,8 @@ private fun DrawScope.drawBuiltin(
     logo: BuiltinLogo,
     dim: Float,
     textMeasurer: androidx.compose.ui.text.TextMeasurer,
-    density: androidx.compose.ui.unit.Density
+    density: androidx.compose.ui.unit.Density,
+    initialsStyle: TextStyle
 ) {
     val primary = argb(logo.primaryColor)
     val secondary = argb(logo.secondaryColor)
@@ -141,7 +144,7 @@ private fun DrawScope.drawBuiltin(
 
     if (hasInitials) {
         val fontSize = with(density) { (dim * 0.19f).toSp() }
-        val style = TextStyle(
+        val style = initialsStyle.copy(
             color = readableOn(background),
             fontSize = fontSize,
             fontWeight = FontWeight.Bold

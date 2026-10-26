@@ -1,4 +1,4 @@
-# Teamval — Especificación del proyecto
+# TeamVal — Especificación del proyecto
 
 ## 1. Fuente y estado de los requisitos
 
@@ -24,12 +24,13 @@ completada (sección 9).
 
 ### Requisitos confirmados
 
-- Aplicación Android llamada Teamval.
+- Aplicación Android llamada TeamVal.
 - Desarrollo progresivo, con arquitectura profesional, Kotlin y Jetpack Compose.
 - Documentación central en `PROJECT_SPEC.md` y planificación en `ROADMAP.md`.
 - Organización en `ui/components`, `ui/screens`, `data`, `domain`, `navigation`
   y `ui/theme` (carpeta de tema).
-- Identidad visual lavanda y carbón.
+- Identidad visual inicial lavanda/carbón; desde 5.5 A, rojo/carbón azul/marfil
+  predeterminados, conservando la apariencia guardada y la paleta anterior.
 - Etapa 1: pantalla de inicio moderna, navegación principal y compilación verificada.
 - Stacks, scrims, tienda y monedas son áreas futuras mencionadas por el usuario.
   Sus funciones no se implementan en la etapa 1.
@@ -60,6 +61,8 @@ completada (sección 9).
     las tres pruebas pendientes se verificaron el 25/10/2026 (registro conservado).
 5. Tienda, monedas, recompensas e inventario — completada y verificada;
    resultados de recuperación en `ROADMAP.md`.
+5.5. Bloque A refinado — identidad, tipografía y apariencia; autorizado en esta
+     petición. Los filtros, rangos y nuevas animaciones quedan para otros bloques.
 
 El usuario ha autorizado la etapa 4 y su ampliación en la misma petición, indicando
 que, si el conjunto era demasiado grande, se entregara primero la funcionalidad
@@ -113,14 +116,16 @@ barra inferior con Inicio, Stacks, Scrims y Tienda.
 ## 3. Diseño visual
 
 - Material 3, tema oscuro de marca consistente con independencia del fondo del dispositivo.
-- Lavanda principal: `#C4B5FD`; carbón de fondo: `#17171C`.
-- Superficie elevada: `#222229`; contenedor lavanda: `#39304F`.
-- Texto principal: `#F5F1FA`; texto secundario: `#C7C2D0`.
+- Base nueva: rojo `#FF4655`, carbón azul `#0F1923`, marfil `#ECE8E1`.
+- Gris azulado `#5A6672` para soporte/bordes; texto secundario oscuro más claro
+  (`#C4CDD5`) para no comprometer legibilidad. Superficies azul carbón graduadas.
+- La paleta lavanda original se mantiene para preferencias anteriores y en el
+  preset Oscuro premium. Los cosméticos de perfil/equipo conservan su identidad.
 - Tarjetas redondeadas, jerarquía tipográfica y espaciado coherentes.
 - Color dinámico desactivado para conservar la identidad visual.
-- Lavanda y carbón constituyen el tema predeterminado. La etapa 3 añadió
-  opciones de temas, colores y tipografías seleccionables, disponibles en
-  la pestaña Perfil → Apariencia.
+- Rojo/carbón azul y Outfit + Exo 2 son el valor predeterminado para nuevas
+  configuraciones. Perfil → Apariencia permite elegir presets, modo, acento HEX,
+  fondo y tipografía, con vista previa, Guardar, Volver y Restablecer.
 - Etapa 3.5 (acabado premium global): superficies translúcidas tipo vidrio con
   borde de luz y sombra suave, degradados de acento en botones e iconos,
   orbes de luz y cabeceras con barra de acento. La inspiración es el diseño
@@ -417,7 +422,7 @@ diagnóstico histórico más abajo y el cierre nominal en `ROADMAP.md`.**
   degradados, banner, fondo de perfil, marcos, estilo visual, insignias
   decorativas, lema, descripción, distribución de secciones y presentación de
   integrantes (cuadrícula, lista o tarjetas).
-- **Editor de logos — Opción A (crear dentro de Teamval):** símbolos y formas
+- **Editor de logos — Opción A (crear dentro de TeamVal):** símbolos y formas
   originales dibujados en la propia app, selección de colores, degradado lineal o
   radial, iniciales o abreviatura, fondo, estilo de marco (ninguno, sólido, brillo,
   doble), formato circular o cuadrado, tamaño del símbolo, vista previa en vivo y
@@ -513,9 +518,9 @@ Resultados históricos de verificación de la entrega original:
 **Estado: completada y verificada el 25/10/2026. Ver registro de recuperación y
 entrega de la etapa 5 en `ROADMAP.md` para comandos, informes y resultados reales.**
 
-### 11.1 Economía: Timbal Coins
+### 11.1 Economía: TeamVal Coins
 
-- Moneda virtual original **Timbal Coins (TC)** con icono propio
+- Moneda virtual original **TeamVal Coins (TC)** con icono propio
   (`ic_coin.xml`, vectorial, estilo trazo blanco coherente con el resto de la
   barra de iconos). **No tiene valor monetario real, no es transferible y no
   puede convertirse en dinero**; el monedero lo indica de forma permanente.
@@ -669,3 +674,67 @@ entrega de la etapa 5 en `ROADMAP.md` para comandos, informes y resultados reale
   focalizada 1/1 correcta. Detalles e informes conservados en `ROADMAP.md`.
 - Las tres pruebas de interfaz pendientes de etapa 4.1 pasaron en las dos
   ejecuciones completas; sus nombres y resultados permanecen documentados.
+
+## 12. Etapa 5.5 — Bloque A refinado
+
+### Alcance y diseño
+
+- Marca unificada: **TeamVal** y **TeamVal Coins**, incluidos recursos de texto,
+  comentarios y documentación. Se conservan paquete, identificadores, nombres de
+  base de datos y claves de preferencias para mantener compatibilidad.
+- Rojo en acciones y selección, carbón azul en superficies, marfil en texto
+  principal oscuro. En claro el texto es oscuro sobre superficies cálidas claras.
+- Vidrio y profundidad centralizados en `Visuals.kt`: bordes de luz, sombras,
+  degradados y rellenos translúcidos más densos para proteger el contraste.
+- Color de texto de chips/píldoras calculado contra su relleno; el rojo de marca
+  se conserva cuando cumple contraste. Colores personalizados extremos ajustan
+  luminosidad en pantalla sin modificar el HEX guardado.
+- Tipografía `Gaming`: Outfit para cuerpo, botones, navegación y formularios;
+  Exo 2 para títulos, encabezados y estadísticas. Todos los roles de Material 3
+  se asignan explícitamente. Iniciales de logos heredan también la tipografía.
+- Ocho TTF estáticos locales (400/500/600/700 por familia), compatibles con API 24,
+  sin red. Licencias SIL OFL 1.1 en `app/src/main/assets/licenses/`.
+
+### Apariencia y compatibilidad
+
+- Presets gratuitos: VALORANT clásico, Oscuro premium, Rojo intenso, Azul/carbón
+  y Claro elegante. Personalizado permite editar los controles existentes.
+- Elegir preset cambia modo, paleta, acento y fondo, pero conserva la tipografía
+  elegida. Restablecer recupera todo el predeterminado nuevo, incluidas las fuentes.
+- `AppPalette` diferencia superficies; `AppearancePreset` aplica valores al
+  mismo `AppAppearance` que consume toda la app. No hay un sistema paralelo.
+- Nueva clave `appearance_palette`. Si falta y existen claves anteriores de
+  apariencia, se usa `Legacy`, manteniendo HEX, modo, fondo y fuente anteriores;
+  leer no escribe ni resetea datos. Un perfil guardado sin configuración de
+  apariencia recibe el nuevo predeterminado. Guardar persiste la paleta elegida.
+- Las opciones Modern/Editorial/Mono conservan sus identificadores y fuentes;
+  la nueva opción Outfit + Exo 2 se puede seleccionar también en instalaciones
+  existentes. La personalización y los presets cosméticos de tienda continúan.
+- No se añade color secundario editable en este bloque: los secundarios y
+  superficies se derivan de la paleta para preservar coherencia y contraste.
+
+### Recursos de marca y límites
+
+`HomeScreen.BrandHeader`, `SectionIcon` y los drawables existentes siguen siendo
+los puntos de integración de logotipo e iconos. Falta un logotipo oficial TeamVal
+y un paquete de emblemas propios aprobados; se conservan los símbolos originales
+provisionales, sin gráficos de Riot ni nuevas funciones de rangos.
+
+No se implementan filtros Premier, selectores de rangos, nueva lógica de rango
+de perfiles, animación de guardado ni nuevas animaciones globales. Sin Tracker,
+backend, API de Riot ni pagos reales.
+
+### Verificación del bloque A
+
+- `:app:assembleDebug` → `BUILD SUCCESSFUL`; APK de depuración generado.
+- `:app:testDebugUnitTest` → **100 pruebas, 0 fallos, 0 omitidas (100 %)**.
+- `:app:lintDebug` → **0 errores y 8 avisos**, los mismos avisos de
+  actualización de dependencias ya presentes en etapas anteriores.
+- `:app:connectedDebugAndroidTest` completo en Pixel 6 / API 37 → **35 pruebas,
+  34 correctas y 1 fallo** en `Stage41FlowTest#rateCompletedScrimAndPreventDuplicates`
+  (etapa 4.1, ajena a este bloque); `AppearanceIdentityTest` 2/2 correctas.
+- Reejecución aislada de esa misma prueba el 26/10/2026 → **1 prueba, 0 fallos**
+  (24,6 s): el fallo anterior fue intermitente de temporización; no se modificó
+  código ni se tocó ninguna prueba.
+
+Detalle y comandos en `ROADMAP.md`.

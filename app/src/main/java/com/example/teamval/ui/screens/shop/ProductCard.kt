@@ -97,7 +97,7 @@ fun ProductCard(
                     Text(
                         stringResource(R.string.shop_premium),
                         style = MaterialTheme.typography.labelSmall,
-                        color = ItemState.Blocked.color
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 } else {
                     CoinAmount(item.priceCoins ?: 0)

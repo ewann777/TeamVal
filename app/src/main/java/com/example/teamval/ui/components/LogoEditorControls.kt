@@ -41,7 +41,7 @@ public val backgroundSwatches = listOf(
     0xFF171528, 0xFF0F172A, 0xFF1F2937, 0xFF3B0764, 0xFF064E3B, 0xFF450A0A, 0xFF111827, 0xFFF8FAFC
 )
 
-/** All controls of option A: creating a logo inside Teamval with live preview. */
+/** All controls of option A: creating a logo inside TeamVal with live preview. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun LogoEditorControls(

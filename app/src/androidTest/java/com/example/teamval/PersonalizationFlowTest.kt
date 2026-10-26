@@ -105,6 +105,6 @@ class PersonalizationFlowTest {
         assertTrue(compose.onRoot().captureToImage().toPixelMap()[8, 100].luminance() < 0.2f)
         compose.onNodeWithText("Apariencia").performScrollTo().performClick()
         compose.onNodeWithText("Oscuro").performScrollTo().assertIsSelected()
-        compose.onNodeWithTag("accent_hex").assertTextContains("C4B5FD")
+        compose.onNodeWithTag("accent_hex").assertTextContains("FF4655")
     }
 }

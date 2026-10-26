@@ -31,7 +31,7 @@ object DemoShopCatalog {
         ShopItem(
             id = "frame_lavanda",
             name = "Marco Lavanda",
-            description = "Anillo lavanda suave alrededor de tu avatar, en la tinta de Teamval.",
+            description = "Anillo lavanda suave alrededor de tu avatar, en la tinta de TeamVal.",
             category = ItemCategory.AvatarFrame,
             rarity = ItemRarity.Common,
             priceCoins = 100,

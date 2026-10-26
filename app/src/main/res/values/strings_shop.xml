@@ -8,10 +8,10 @@
     <string name="inventory_title">Inventario</string>
     <string name="inventory_subtitle">Tus cosméticos adquiridos y su estado.</string>
     <string name="wallet_title">Monedero</string>
-    <string name="wallet_subtitle">Saldo, movimientos y recompensas de Timbal Coins.</string>
+    <string name="wallet_subtitle">Saldo, movimientos y recompensas de TeamVal Coins.</string>
     <string name="rewards_title">Recompensas</string>
     <string name="rewards_subtitle">Misiones gratuitas con monedas ficticias.</string>
-    <string name="coin_name">Timbal Coins</string>
+    <string name="coin_name">TeamVal Coins</string>
 
     <!-- Monedero -->
     <string name="wallet_balance">Saldo actual</string>
@@ -21,7 +21,7 @@
     <string name="wallet_empty">Todavía no hay movimientos en tu monedero.</string>
     <string name="wallet_received">Recompensas recibidas</string>
     <string name="wallet_received_empty">Aún no has recibido recompensas.</string>
-    <string name="wallet_disclaimer">Las Timbal Coins son ficticias: sin valor real, no transferibles y sin conversión a dinero.</string>
+    <string name="wallet_disclaimer">Las TeamVal Coins son ficticias: sin valor real, no transferibles y sin conversión a dinero.</string>
     <string name="wallet_open">Monedero</string>
 
     <!-- Tienda -->
@@ -37,7 +37,7 @@
     <string name="shop_details">Ver detalles</string>
     <string name="shop_close">Cerrar</string>
     <string name="shop_confirm_title">Confirmar compra</string>
-    <string name="shop_confirm_message" formatted="true" tools:ignore="PluralsCandidate">¿Comprar %1$s por %2$d Timbal Coins?</string>
+    <string name="shop_confirm_message" formatted="true" tools:ignore="PluralsCandidate">¿Comprar %1$s por %2$d TeamVal Coins?</string>
     <string name="shop_confirm_action">Comprar ahora</string>
     <string name="shop_no_items">No hay artículos en esta categoría.</string>
     <string name="shop_contains" formatted="true">Incluye: %1$s</string>
@@ -69,7 +69,7 @@
     <string name="rewards_pending_hint">Esta recompensa se activará cuando exista un sistema verificado de sesiones y valoraciones. No se simula su cumplimiento.</string>
     <string name="rewards_empty">No hay recompensas en esta sección.</string>
     <string name="rewards_demo_hint">Misiones ficticias de demostración: pulsa Simular progreso para avanzar.</string>
-    <string name="rewards_amount" formatted="true" tools:ignore="PluralsCandidate">+%1$d Timbal Coins</string>
+    <string name="rewards_amount" formatted="true" tools:ignore="PluralsCandidate">+%1$d TeamVal Coins</string>
 
     <!-- Estados y categorías -->
     <string name="state_blocked">Bloqueado</string>
@@ -107,7 +107,7 @@
     <string name="shop_error_not_owned">Adquiere este artículo antes de equiparlo.</string>
     <string name="shop_team_editor_required">Aplica este cosmético desde el editor de equipo y pulsa Guardar.</string>
     <string name="shop_error_generic">No se pudo completar la operación.</string>
-    <string name="shop_reward_claimed" formatted="true">Reclamaste %1$s Timbal Coins.</string>
+    <string name="shop_reward_claimed" formatted="true">Reclamaste %1$s TeamVal Coins.</string>
     <string name="shop_reward_already">Esta recompensa ya fue reclamada.</string>
     <string name="shop_reward_incomplete">La misión aún no está completada.</string>
     <string name="shop_reward_pending">Esta recompensa requiere un sistema de verificación.</string>

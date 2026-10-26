@@ -61,11 +61,11 @@
     <string name="preferences_loading">Preparando tu espacio…</string>
     <string name="preferences_retry">Reintentar</string>
     <string name="appearance_title">Apariencia</string>
-    <string name="appearance_preview">Diseña tu Teamval</string>
+    <string name="appearance_preview">Diseña tu TeamVal</string>
     <string name="appearance_preview_hint">Esta pantalla y la navegación muestran la vista previa. Guarda para aplicar el estilo en toda la aplicación.</string>
     <string name="preview_live">VISTA PREVIA EN VIVO</string>
     <string name="appearance_sample_title">Tu estilo. Tu equipo.</string>
-    <string name="appearance_sample_body">Colores que conectan, detalles que te representan. Haz de Teamval tu propio espacio.</string>
+    <string name="appearance_sample_body">Colores que conectan, detalles que te representan. Haz de TeamVal tu propio espacio.</string>
     <string name="apply_appearance">Aplicar apariencia</string>
     <string name="appearance_theme">Tema de aplicación</string>
     <string name="theme_dark">Oscuro</string>

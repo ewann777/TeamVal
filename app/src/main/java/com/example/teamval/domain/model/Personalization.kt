@@ -12,7 +12,8 @@ enum class ProfileCardStyle { Base, Especial, Cambio }
 enum class FavoriteAgent { Jett, Sage, Omen, Killjoy, Raze, Sova }
 enum class AppThemeMode { Dark, Light, System }
 enum class AppBackground { Plain, Aurora, Grid }
-enum class AppFont { Modern, Editorial, Mono }
+enum class AppFont { Modern, Editorial, Mono, Gaming }
+enum class AppPalette { Classic, Legacy, Crimson, Ocean }
 enum class ProfileField { Name, Headline, Biography }
 
 data class PlayerProfile(
@@ -42,12 +43,28 @@ data class PlayerProfile(
 
 data class AppAppearance(
     val mode: AppThemeMode = AppThemeMode.Dark,
-    val accentHex: String = "C4B5FD",
+    val accentHex: String = "FF4655",
     val background: AppBackground = AppBackground.Plain,
-    val font: AppFont = AppFont.Modern
+    val font: AppFont = AppFont.Gaming,
+    val palette: AppPalette = AppPalette.Classic
 ) {
     fun isValid(): Boolean = accentHex.removePrefix("#").matches(Regex("[0-9a-fA-F]{6}"))
     fun normalized() = copy(accentHex = accentHex.removePrefix("#").uppercase())
+}
+
+/** Presets gratuitos de apariencia; no duplican el inventario cosmético. */
+enum class AppearancePreset {
+    Classic, Premium, IntenseRed, BlueCharcoal, ElegantLight;
+
+    fun apply(current: AppAppearance): AppAppearance = when (this) {
+        Classic -> AppAppearance(font = current.font)
+        Premium -> current.copy(mode = AppThemeMode.Dark, accentHex = "C4B5FD", palette = AppPalette.Legacy, background = AppBackground.Aurora)
+        IntenseRed -> current.copy(mode = AppThemeMode.Dark, accentHex = "FF4655", palette = AppPalette.Crimson, background = AppBackground.Aurora)
+        BlueCharcoal -> current.copy(mode = AppThemeMode.Dark, accentHex = "69C8FF", palette = AppPalette.Ocean, background = AppBackground.Grid)
+        ElegantLight -> current.copy(mode = AppThemeMode.Light, accentHex = "FF4655", palette = AppPalette.Classic, background = AppBackground.Plain)
+    }
+
+    fun matches(appearance: AppAppearance): Boolean = apply(appearance) == appearance.normalized()
 }
 
 data class UserPreferences(

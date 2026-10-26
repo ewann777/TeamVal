@@ -1,4 +1,4 @@
-# Teamval — Roadmap
+# TeamVal — Roadmap
 
 ## Regla de trabajo
 
@@ -6,9 +6,9 @@ Antes de cada etapa, consultar `PROJECT_SPEC.md` y este documento. Trabajar solo
 en la etapa solicitada, verificar su resultado, actualizar la documentación y
 detenerse. No iniciar automáticamente la siguiente etapa.
 
-El orden definitivo acordado con el usuario es el siguiente. La etapa 5 se retomó
-desde los archivos existentes y está completada y verificada. El desarrollo se
-detiene aquí; cualquier trabajo posterior requiere una nueva petición.
+El orden definitivo acordado con el usuario es el siguiente. La etapa 5 está
+completada. Se autoriza únicamente el bloque A refinado de la etapa 5.5;
+cualquier otro bloque requiere una nueva petición.
 
 ## Etapa 1 — Base visual y arquitectura
 
@@ -95,7 +95,7 @@ registro histórico y el resultado nominal al final.**
 **Estado: completada y verificada el 25/10/2026. Ver resultados exactos al final.**
 
 - Tienda de cosméticos vinculada a la personalización de perfiles y aplicación. ✓
-- Monedas gratuitas (Timbal Coins) y recompensas: saldo, gasto, historial y
+- Monedas gratuitas (TeamVal Coins) y recompensas: saldo, gasto, historial y
   recompensas de un solo uso. ✓
 - Artículos premium con precios en pesos chilenos (CLP) informativos y
   bloqueados: **sin pagos reales**. ✓
@@ -625,7 +625,7 @@ Las tres pasaron en ambas ejecuciones completas de esta recuperación. En la
 Ya no quedan pendientes de reejecución; no se alteraron ni se desactivaron estas
 pruebas para obtener el resultado.
 
-### Punto de parada actual y límites
+### Punto de parada histórico de etapa 5 y límites
 
 **Etapa 5 completada y verificada. No quedan funcionalidades pendientes dentro
 del alcance del prototipo. Se detiene el desarrollo aquí.**
@@ -637,3 +637,96 @@ del alcance del prototipo. Se detiene el desarrollo aquí.**
   sesión en memoria. Comprar un cosmético de equipo sí persiste su propiedad.
 - La validación se realizó en Pixel 6/API 37. No se realizó una auditoría manual
   de TalkBack ni una matriz adicional de dispositivos/tamaños de texto.
+
+## Etapa 5.5 — Bloque A refinado: identidad y apariencia
+
+**Estado: completada; compilación, Lint y pruebas unitarias/instrumentadas
+verificadas el 25–26/10/2026.**
+
+### Revisión inicial
+
+- Lectura completa de especificación/roadmap e inspección de tema, tipografía,
+  preferencias, navegación, componentes compartidos, perfiles y economía.
+- Git limpio al comenzar, commit `346846d` (etapa 5). No había fuentes ni cambios
+  parciales de la etapa 5.5: se continuó sobre los componentes existentes.
+
+### Entrega
+
+- Marca **TeamVal / TeamVal Coins** unificada en recursos, código y documentación;
+  sin cambiar identificadores persistidos ni datos económicos.
+- Paleta nueva rojo/carbón azul/marfil; vidrio, sombras y degradados conservados.
+- Texto secundario más legible, chips/navegación/píldoras con contraste ajustado,
+  fondo Pastel de perfil oscurecido para que el texto blanco sea legible.
+- Outfit + Exo 2 locales, con pesos reales y licencias OFL incluidas. Selector
+  de fuentes anteriores conservado. Tipografía global desde MaterialTheme.
+- Perfil → Apariencia más explícito; cinco presets con muestras de color y
+  opción Personalizado, vista previa, guardado/descarte y restauración.
+- Preferencias previas conservadas con paleta Legacy por lectura compatible;
+  configuraciones nuevas usan VALORANT clásico y Outfit + Exo 2.
+
+### Archivos
+
+Rutas Kotlin bajo `app/src/main/java/com/example/teamval/`:
+
+- Sistema visual: `ui/theme/Color.kt`, `Theme.kt`, `Type.kt`, `Visuals.kt`.
+- Apariencia: `domain/model/Personalization.kt`,
+  `data/repository/LocalPreferencesRepository.kt`,
+  `ui/screens/profile/AppearanceScreen.kt`, `ProfileScreen.kt`,
+  `ui/components/ProfileLabels.kt`.
+- Componentes: `navigation/TeamValNavigationBar.kt`,
+  `ui/components/TeamValChip.kt`, `ProfileHero.kt`, `ProfileDecorations.kt`,
+  `TeamLogoView.kt`, `ui/screens/shop/ShopComponents.kt`, `ProductCard.kt`.
+- Solo unificación textual adicional: `domain/model/EconomyModels.kt`,
+  `TeamIdentity.kt`, `data/fake/DemoShopCatalog.kt`,
+  `ui/screens/home/HomeScreen.kt`, `ui/screens/wallet/WalletScreen.kt`,
+  `ui/screens/teams/LogoEditorScreen.kt`, `ui/components/LogoEditorControls.kt`.
+- Recursos: `res/values/strings_appearance.xml` (nuevo), `colors.xml`, `themes.xml`,
+  `strings.xml`, `strings_profile.xml`, `strings_shop.xml`, `strings_identity.xml`,
+  `strings_ratings.xml` y `res/drawable/ic_coin.xml`.
+- Nuevos: `res/font/outfit_{regular,medium,semibold,bold}.ttf`,
+  `res/font/exo2_{regular,medium,semibold,bold}.ttf`,
+  `assets/licenses/outfit_ofl.txt`, `exo2_ofl.txt`, `README.md`.
+- Pruebas: `LocalPreferencesRepositoryTest.kt`, `PersonalizationThemeTest.kt`,
+  `PersonalizationFlowTest.kt`, `Stage5FlowTest.kt` y nueva
+  `androidTest/…/AppearanceIdentityTest.kt`.
+- `PROJECT_SPEC.md` y este roadmap.
+
+### Verificación
+
+Ejecutada en Pixel 6 / Android 17 (API 37), sin modificar ni desactivar ninguna
+prueba existente. Resultados reales:
+
+- `:app:assembleDebug` → `BUILD SUCCESSFUL`; APK de depuración generado en
+  `app/build/outputs/apk/debug/`.
+- `:app:testDebugUnitTest` → **100 pruebas, 0 fallos, 0 omitidas (100 %)**,
+  incluidas las nuevas de contraste/presets/tipografía y de persistencia
+  compatible (`LocalPreferencesRepositoryTest` 5/5).
+  Informe: `app/build/reports/tests/testDebugUnitTest/index.html`.
+- `:app:lintDebug` → **0 errores y 8 avisos** de versiones disponibles de
+  dependencias ya presentes. Informe: `app/build/reports/lint-results-debug.html`.
+- `:app:connectedDebugAndroidTest` (suite completa) → **35 pruebas, 34 correctas
+  y 1 fallo**: `Stage41FlowTest#rateCompletedScrimAndPreventDuplicates`
+  (`assertExists` del tag `rating_sent`), prueba de la etapa 4.1 ajena a este
+  bloque. Las nuevas `AppearanceIdentityTest` pasaron 2/2 y el resto de suites
+  (Personalization, Stage5, Economy, Stacks, Team…) también.
+- Reejecución aislada autorizada de esa prueba:
+  `.\gradlew.bat :app:connectedDebugAndroidTest '-Pandroid.testInstrumentationRunnerArguments.class=com.example.teamval.Stage41FlowTest#rateCompletedScrimAndPreventDuplicates'`
+  → **1 prueba, 0 fallos** (24,6 s, `BUILD SUCCESSFUL`). El fallo anterior fue
+  intermitente de temporización; no se tocó el código ni ninguna prueba.
+  Informe: `app/build/reports/androidTests/connected/debug/`.
+
+Verificación funcional en el emulador: la app arranca con la nueva paleta
+rojo/carbón/marfil y la tipografía Outfit + Exo 2 aplicadas de forma global.
+
+### Pendientes documentales de este bloque
+
+- Commit de los cambios (pendiente de autorización; no se ha hecho `commit` ni
+  `push` de esta entrega).
+- Auditoría manual de TalkBack y matriz adicional de dispositivos/tamaños de
+  texto, como en etapas anteriores.
+
+### Próximos bloques (no iniciados)
+
+Selectores de rango, Premier, rango de perfiles y animaciones se mantienen fuera
+de esta entrega. Recursos pendientes: logo oficial y emblemas propios aprobados,
+integrables en BrandHeader/SectionIcon/drawables existentes. No se inicia otro bloque.

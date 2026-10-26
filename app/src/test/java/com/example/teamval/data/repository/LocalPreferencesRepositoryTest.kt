@@ -79,7 +79,50 @@ class LocalPreferencesRepositoryTest {
             val saved = LocalPreferencesRepository(store).preferences.first()
             assertEquals(AvatarStyle.Nova, saved.profile.avatar)
             assertEquals(setOf(ProfileBadge.Teamwork), saved.profile.badges)
-            assertEquals(AppAppearance(), saved.appearance)
+            assertEquals(AppAppearance(accentHex = "C4B5FD", font = AppFont.Modern, palette = AppPalette.Legacy), saved.appearance)
         } finally { job.cancelAndJoin() }
+    }
+
+    @Test
+    fun legacyAppearanceKeepsItsValuesWithoutWritingOrResettingProfile() = runBlocking {
+        val file = File(temporaryFolder.root, "legacy.preferences_pb")
+        val job = SupervisorJob()
+        val store = PreferenceDataStoreFactory.create(scope = CoroutineScope(job + Dispatchers.IO), produceFile = { file })
+        try {
+            store.edit {
+                it[stringPreferencesKey("appearance_accent")] = "88DCC4"
+                it[stringPreferencesKey("appearance_mode")] = "Light"
+                it[stringPreferencesKey("appearance_background")] = "Grid"
+                it[stringPreferencesKey("appearance_font")] = "Editorial"
+                it[stringPreferencesKey("profile_name")] = "Jugador existente"
+            }
+            val before = store.data.first()
+            val repository = LocalPreferencesRepository(store)
+            val saved = repository.preferences.first()
+            assertEquals(AppAppearance(AppThemeMode.Light, "88DCC4", AppBackground.Grid, AppFont.Editorial, AppPalette.Legacy), saved.appearance)
+            assertEquals("Jugador existente", saved.profile.name)
+            assertEquals(before, store.data.first())
+            repository.saveAppearance(saved.appearance)
+            assertEquals(saved, repository.preferences.first())
+        } finally { job.cancelAndJoin() }
+    }
+
+    @Test
+    fun profileOnlyInstallGetsNewAppearanceAndPresetsSurviveReopening() = runBlocking {
+        val file = File(temporaryFolder.root, "presets.preferences_pb")
+        withRepository(file) { repo ->
+            repo.saveProfile(PlayerProfile(name = "Perfil conservado"))
+            assertEquals(AppAppearance(), repo.preferences.first().appearance)
+            assertEquals("FF4655", repo.preferences.first().appearance.accentHex)
+            assertEquals(AppFont.Gaming, repo.preferences.first().appearance.font)
+        }
+        AppearancePreset.entries.forEach { preset ->
+            val appearance = preset.apply(AppAppearance(font = AppFont.Mono))
+            withRepository(file) { it.saveAppearance(appearance) }
+            withRepository(file) {
+                assertEquals(appearance, it.preferences.first().appearance)
+                assertEquals("Perfil conservado", it.preferences.first().profile.name)
+            }
+        }
     }
 }

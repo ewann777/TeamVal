@@ -1,7 +1,7 @@
 package com.example.teamval.domain.model
 
 /**
- * Etapa 5: economía virtual de Teamval (Timbal Coins).
+ * Etapa 5: economía virtual de TeamVal (TeamVal Coins).
  *
  * Las monedas son ficticias: no tienen valor monetario real, no son
  * transferibles y no pueden convertirse en dinero. Los precios premium en CLP

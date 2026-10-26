@@ -59,11 +59,13 @@ fun ProfileScreen(
             ProfileHero(profile)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 PrimaryButton(text = stringResource(R.string.edit_profile), onClick = onEdit)
-                OutlinedButton(onClick = onAppearance) { Text(stringResource(R.string.appearance_title)) }
+                OutlinedButton(onClick = onAppearance, modifier = Modifier.testTag("profile_appearance")) { Text(stringResource(R.string.appearance_title)) }
                 OutlinedButton(onClick = onOpenInventory, modifier = Modifier.testTag("profile_inventory")) {
                     Text(stringResource(R.string.profile_inventory))
                 }
             }
+            Text(stringResource(R.string.appearance_access_hint), style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
             SettingsSection(stringResource(R.string.biography_title)) {
                 Text(profile.biography.ifBlank { stringResource(R.string.biography_empty) }, style = MaterialTheme.typography.bodyLarge)
             }

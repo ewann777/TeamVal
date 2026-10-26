@@ -11,6 +11,7 @@ import com.example.teamval.domain.model.AppAppearance
 import com.example.teamval.domain.model.AppBackground
 import com.example.teamval.domain.model.AppFont
 import com.example.teamval.domain.model.AppThemeMode
+import com.example.teamval.domain.model.AppPalette
 import com.example.teamval.domain.model.PlayerProfile
 import com.example.teamval.domain.model.ProfileBadge
 import com.example.teamval.domain.model.UserPreferences
@@ -38,6 +39,7 @@ class LocalPreferencesRepository(private val store: DataStore<Preferences>) : Pr
         val accent = stringPreferencesKey("appearance_accent")
         val appBackground = stringPreferencesKey("appearance_background")
         val font = stringPreferencesKey("appearance_font")
+        val palette = stringPreferencesKey("appearance_palette")
     }
 
     override val preferences = store.data.map { values ->
@@ -57,11 +59,18 @@ class LocalPreferencesRepository(private val store: DataStore<Preferences>) : Pr
             pet = enumOrDefault(values[Keys.pet], default.pet),
             card = enumOrDefault(values[Keys.card], default.card)
         )
+        // Solo una configuración de apariencia anterior activa los valores de
+        // compatibilidad. Tener un perfil guardado no impide el nuevo tema base.
+        val legacy = values[Keys.palette] == null &&
+            listOf(Keys.mode, Keys.accent, Keys.appBackground, Keys.font).any { values[it] != null }
+        val defaults = if (legacy) AppAppearance(accentHex = "C4B5FD", font = AppFont.Modern, palette = AppPalette.Legacy)
+            else AppAppearance()
         val appearance = AppAppearance(
             mode = enumOrDefault(values[Keys.mode], AppThemeMode.Dark),
-            accentHex = values[Keys.accent]?.takeIf { AppAppearance(accentHex = it).isValid() } ?: "C4B5FD",
+            accentHex = values[Keys.accent]?.takeIf { AppAppearance(accentHex = it).isValid() } ?: defaults.accentHex,
             background = enumOrDefault(values[Keys.appBackground], AppBackground.Plain),
-            font = enumOrDefault(values[Keys.font], AppFont.Modern)
+            font = enumOrDefault(values[Keys.font], defaults.font),
+            palette = enumOrDefault(values[Keys.palette], defaults.palette)
         ).normalized()
         UserPreferences(profile, appearance)
     }
@@ -94,6 +103,7 @@ class LocalPreferencesRepository(private val store: DataStore<Preferences>) : Pr
             it[Keys.accent] = normalized.accentHex
             it[Keys.appBackground] = normalized.background.name
             it[Keys.font] = normalized.font.name
+            it[Keys.palette] = normalized.palette.name
         }
     }
 

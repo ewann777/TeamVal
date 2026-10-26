@@ -31,7 +31,7 @@ import java.text.DateFormat
 import java.util.Date
 
 /**
- * Monedero de Timbal Coins: saldo, monedas obtenidas y gastadas, historial de
+ * Monedero de TeamVal Coins: saldo, monedas obtenidas y gastadas, historial de
  * movimientos y recompensas recibidas. Las monedas no tienen valor real.
  */
 @Composable

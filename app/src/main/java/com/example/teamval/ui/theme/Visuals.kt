@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
- * Tokens visuales compartidos de la identidad premium de Teamval: degradados de
+ * Tokens visuales compartidos de la identidad premium de TeamVal: degradados de
  * acento, rellenos de vidrio y profundidad de sombras.
  *
  * Todos los valores se derivan del esquema Material activo, de modo que siguen el
@@ -35,7 +35,7 @@ fun teamValVisuals(colors: ColorScheme, dark: Boolean): TeamValVisuals {
     val onAccent = colors.onPrimary
     // El degradado se aleja del color del texto para no comprometer el contraste.
     val awayFromText = if (onAccent.luminance() > 0.5f) Color.Black else Color.White
-    val accentText = if (dark) lerp(accent, Color.White, 0.40f) else accent
+    val accentText = contrastingColor(accent, colors.surfaceContainerHigh)
     val surface = colors.surface
     return TeamValVisuals(
         isDark = dark,
@@ -43,13 +43,13 @@ fun teamValVisuals(colors: ColorScheme, dark: Boolean): TeamValVisuals {
         accentText = accentText,
         accentGradient = Brush.linearGradient(
             listOf(
-                lerp(accent, awayFromText, 0.16f),
+                lerp(accent, awayFromText, 0.06f),
                 accent,
                 lerp(accent, awayFromText, 0.06f)
             )
         ),
         glassFill = Brush.verticalGradient(
-            listOf(surface.copy(alpha = 0.94f), surface.copy(alpha = 0.80f))
+            listOf(colors.surfaceContainerHigh.copy(alpha = 0.96f), surface.copy(alpha = 0.92f))
         ),
         glassBorder = Brush.linearGradient(
             listOf(

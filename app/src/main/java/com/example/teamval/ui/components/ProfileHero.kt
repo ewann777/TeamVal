@@ -40,7 +40,7 @@ fun ProfileHero(profile: PlayerProfile, modifier: Modifier = Modifier) {
         ProfileBackground.Sunset -> listOf(Color(0xFF783E50), Color(0xFF302132))
         ProfileBackground.Graphite -> listOf(Color(0xFF3B3B43), Color(0xFF19191E))
         // Fondos cosméticos de la tienda (etapa 5).
-        ProfileBackground.Pastel -> listOf(Color(0xFF8B7BA8), Color(0xFF4A4458))
+        ProfileBackground.Pastel -> listOf(Color(0xFF67577F), Color(0xFF363043))
         ProfileBackground.Aurora -> listOf(Color(0xFF35707E), Color(0xFF1B2A3A))
         ProfileBackground.Galaxia -> listOf(Color(0xFF3B1E63), Color(0xFF171033))
     }

@@ -48,7 +48,7 @@
     <string name="reputation_badges">Insignias de reputación</string>
     <string name="reputation_recent">Comentarios recientes</string>
     <string name="reputation_report">Denunciar comentario</string>
-    <string name="reputation_reported">Comentario denunciado. La revisión llegará con la moderación de Teamval.</string>
+    <string name="reputation_reported">Comentario denunciado. La revisión llegará con la moderación de TeamVal.</string>
     <string name="reputation_report_done">Comentario denunciado correctamente.</string>
     <string name="reputation_demo_note">Demo · Valoraciones ficticias guardadas en el dispositivo. La moderación y las apelaciones llegarán con el backend.</string>
     <string name="scrim_history_title">Historial de scrims</string>

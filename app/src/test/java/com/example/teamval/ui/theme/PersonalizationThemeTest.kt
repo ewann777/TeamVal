@@ -7,6 +7,9 @@ import com.example.teamval.domain.model.PlayerProfile
 import com.example.teamval.domain.model.ProfileField
 import com.example.teamval.domain.model.Reputation
 import com.example.teamval.domain.model.PlayerReview
+import com.example.teamval.domain.model.AppearancePreset
+import com.example.teamval.domain.model.AppFont
+import androidx.compose.ui.graphics.lerp
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -22,6 +25,41 @@ class PersonalizationThemeTest {
                 assertTrue(contrast(colors.onPrimaryContainer, colors.primaryContainer) >= 4.5f)
             }
         }
+    }
+
+    @Test
+    fun brandColorsAndPresetSurfacesKeepReadableText() {
+        val classic = teamValColorScheme(AppAppearance(), dark = true)
+        assertEquals(ValorantRed, classic.primary)
+        assertEquals(CarbonBlue, classic.background)
+        assertEquals(Ivory, classic.onBackground)
+        for (preset in AppearancePreset.entries) for (dark in listOf(true, false)) {
+            val colors = teamValColorScheme(preset.apply(AppAppearance()), dark)
+            val visuals = teamValVisuals(colors, dark)
+            listOf(colors.background, colors.surface, colors.surfaceContainerHigh).forEach { surface ->
+                assertTrue("$preset main text", contrast(colors.onSurface, surface) >= 4.5f)
+                assertTrue("$preset secondary text", contrast(colors.onSurfaceVariant, surface) >= 4.5f)
+                assertTrue("$preset accent", contrast(visuals.accentText, surface) >= 4.5f)
+            }
+            assertTrue(contrast(colors.onPrimary, colors.primary) >= 4.5f)
+            // Botones degradados: también deben contrastar en sus extremos.
+            val away = if (colors.onPrimary.luminance() > 0.5f) Color.Black else Color.White
+            assertTrue(contrast(colors.onPrimary, lerp(colors.primary, away, 0.06f)) >= 4.5f)
+            val chipFill = lerp(colors.surface, colors.primary, 0.14f)
+            assertTrue(contrast(contrastingColor(colors.primary, chipFill), chipFill) >= 4.5f)
+        }
+    }
+
+    @Test
+    fun gamingTypographyCoversEveryMaterialRoleAndKeepsLegacySelection() {
+        val type = teamValTypography(AppFont.Gaming)
+        listOf(type.displayLarge, type.displayMedium, type.displaySmall, type.headlineLarge,
+            type.headlineMedium, type.headlineSmall, type.titleLarge, type.titleMedium, type.titleSmall)
+            .forEach { assertEquals(Exo2, it.fontFamily) }
+        listOf(type.bodyLarge, type.bodyMedium, type.bodySmall, type.labelLarge, type.labelMedium, type.labelSmall)
+            .forEach { assertEquals(Outfit, it.fontFamily) }
+        assertEquals(androidx.compose.ui.text.font.FontFamily.Serif, teamValTypography(AppFont.Editorial).bodyLarge.fontFamily)
+        assertEquals(androidx.compose.ui.text.font.FontFamily.Monospace, teamValTypography(AppFont.Mono).headlineLarge.fontFamily)
     }
 
     @Test

@@ -22,6 +22,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.teamval.ui.components.HairlineDivider
 import com.example.teamval.ui.theme.LocalTeamValVisuals
+import com.example.teamval.ui.theme.contrastingColor
+import androidx.compose.ui.graphics.lerp
 
 /**
  * Barra inferior con acabado de vidrio: superficie translúcida, filete de luz
@@ -62,8 +64,8 @@ fun TeamValNavigationBar(navController: NavHostController, enabled: Boolean = tr
                     },
                     label = { Text(stringResource(destination.labelRes)) },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = colors.primary,
-                        selectedTextColor = colors.primary,
+                        selectedIconColor = contrastingColor(colors.primary, lerp(colors.surface, colors.primary, 0.18f)),
+                        selectedTextColor = contrastingColor(colors.primary, colors.surface),
                         indicatorColor = colors.primary.copy(alpha = 0.18f),
                         unselectedIconColor = colors.onSurfaceVariant,
                         unselectedTextColor = colors.onSurfaceVariant

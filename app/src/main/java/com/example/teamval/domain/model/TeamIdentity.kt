@@ -17,7 +17,7 @@ enum class ProfileFrame { None, Ring, Glow, Gradient, Orbit, Prism }
 enum class SectionLayout { Standard, Compact, Spotlight }
 enum class MemberStyle { Grid, List, Cards }
 
-/** Logo drawn inside Teamval: symbol, colors, initials, background, frame and size. */
+/** Logo drawn inside TeamVal: symbol, colors, initials, background, frame and size. */
 data class BuiltinLogo(
     val symbol: LogoSymbol = LogoSymbol.Star,
     val initials: String = "",

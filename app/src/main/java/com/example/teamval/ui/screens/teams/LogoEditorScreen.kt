@@ -47,7 +47,7 @@ import com.example.teamval.ui.components.messageRes
 
 /**
  * Logo editor with the two supported paths: option A creates an original logo
- * inside Teamval, option B uploads an image with the Android Photo Picker (no
+ * inside TeamVal, option B uploads an image with the Android Photo Picker (no
  * storage permissions requested).
  */
 @Composable

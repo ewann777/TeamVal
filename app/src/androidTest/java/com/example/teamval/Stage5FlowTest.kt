@@ -346,7 +346,7 @@ class Stage5FlowTest {
     fun test09_profileRewardAndBundleKeepExactBalanceAndOwnership() {
         click("nav_profile")
         compose.onNodeWithText("Editar perfil").performScrollTo().performClick()
-        compose.onNodeWithTag("profile_headline").performScrollTo().performTextReplacement("Mi perfil de Teamval")
+        compose.onNodeWithTag("profile_headline").performScrollTo().performTextReplacement("Mi perfil de TeamVal")
         compose.onNodeWithTag("profile_headline").performImeAction()
         compose.onNodeWithTag("save_preferences").performClick()
         waitUntilText("Cambios guardados en este dispositivo.")

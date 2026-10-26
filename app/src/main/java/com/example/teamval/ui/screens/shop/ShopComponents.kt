@@ -49,6 +49,8 @@ import com.example.teamval.domain.model.ShopItem
 import com.example.teamval.ui.components.glassSurface
 import com.example.teamval.ui.components.labelRes
 import com.example.teamval.ui.theme.LocalTeamValVisuals
+import com.example.teamval.ui.theme.contrastingColor
+import androidx.compose.ui.graphics.lerp
 
 /** Color de la rareza estética (decorativa, sin efectos competitivos). */
 val ItemRarity.color: Color
@@ -67,7 +69,7 @@ val ItemState.color: Color
         ItemState.Equipped -> Color(0xFF34D399)
     }
 
-/** Cantidad de Timbal Coins con icono original. */
+/** Cantidad de TeamVal Coins con icono original. */
 @Composable
 fun CoinAmount(amount: Int, modifier: Modifier = Modifier, showSign: Boolean = false) {
     val visuals = LocalTeamValVisuals.current
@@ -112,17 +114,18 @@ fun ItemStateBadge(state: ItemState, modifier: Modifier = Modifier) {
 /** Píldora de color reutilizable para estados. */
 @Composable
 fun PillLabel(text: String, color: Color, modifier: Modifier = Modifier) {
+    val fill = lerp(MaterialTheme.colorScheme.surface, color, 0.12f)
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(50),
-        color = color.copy(alpha = 0.16f),
+        color = fill,
         border = BorderStroke(1.dp, color.copy(alpha = 0.55f))
     ) {
         Text(
             text,
             Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
             style = MaterialTheme.typography.labelSmall,
-            color = color
+            color = contrastingColor(color, fill)
         )
     }
 }

@@ -146,7 +146,7 @@ private fun BrandHeader() {
     }
 }
 
-/** Saldo de Timbal Coins accesible desde el inicio (etapa 5). */
+/** Saldo de TeamVal Coins accesible desde el inicio (etapa 5). */
 @Composable
 private fun BalancePill(balance: Int, onClick: () -> Unit) {
     val visuals = LocalTeamValVisuals.current

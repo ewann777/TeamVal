@@ -13,7 +13,7 @@
     <string name="identity_description">Descripción</string>
     <string name="identity_motto">Lema del equipo</string>
 
-    <!-- Opción A: crear el logo dentro de Teamval -->
+    <!-- Opción A: crear el logo dentro de TeamVal -->
     <string name="logo_editor_title">Editor de logo</string>
     <string name="logo_editor_subtitle">Crea un logo original o usa una imagen tuya.</string>
     <string name="logo_option_create">Crear logo</string>
@@ -68,7 +68,7 @@
     <string name="image_crop_reset">Centrar</string>
     <string name="image_preview_square">Cuadrada</string>
     <string name="image_preview_circle">Circular</string>
-    <string name="image_moderation_note">Demo · Solo validamos formato y tamaño. La revisión de contenido, las denuncias y la moderación llegarán con el backend de Teamval.</string>
+    <string name="image_moderation_note">Demo · Solo validamos formato y tamaño. La revisión de contenido, las denuncias y la moderación llegarán con el backend de TeamVal.</string>
     <string name="image_size_note">%1$d × %2$d px · %3$s</string>
 
     <!-- Personalización del perfil del equipo -->

@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.unit.dp
 import com.example.teamval.ui.theme.LocalTeamValVisuals
+import com.example.teamval.ui.theme.contrastingColor
 
 /**
  * Chip con estado seleccionado iluminado por el acento activo. Se usa en
@@ -37,7 +38,7 @@ fun AccentFilterChip(
             containerColor = colors.surface.copy(alpha = 0.65f),
             labelColor = colors.onSurface,
             selectedContainerColor = lerp(colors.surface, colors.primary, 0.14f),
-            selectedLabelColor = visuals.accentText,
+            selectedLabelColor = contrastingColor(visuals.accentText, lerp(colors.surface, colors.primary, 0.14f)),
             disabledContainerColor = colors.surface.copy(alpha = 0.4f),
             disabledLabelColor = colors.onSurfaceVariant.copy(alpha = 0.6f)
         ),

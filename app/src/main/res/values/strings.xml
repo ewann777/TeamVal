@@ -9,14 +9,14 @@
     <string name="home_title">Tu próximo equipo empieza aquí.</string>
     <string name="home_description">Un espacio para conectar, compartir objetivos y disfrutar cada partida en equipo.</string>
     <string name="home_action">Descubrir Stacks</string>
-    <string name="home_explore">Explora Teamval</string>
+    <string name="home_explore">Explora TeamVal</string>
     <string name="home_explore_description">Encuentra compañeros de VALORANT y descubre lo que viene.</string>
     <string name="home_stacks_description">Explora equipos, publica tu stack y conecta con otros jugadores.</string>
     <string name="home_scrims_description">Un espacio para los próximos desafíos de tu equipo.</string>
-    <string name="home_store_description">Descubre cosméticos, usa tus Timbal Coins y reclama recompensas gratuitas.</string>
+    <string name="home_store_description">Descubre cosméticos, usa tus TeamVal Coins y reclama recompensas gratuitas.</string>
     <string name="coming_soon">Próximamente</string>
     <string name="upcoming_title">Lo mejor se construye en equipo.</string>
-    <string name="upcoming_description">La sección %1$s estará disponible en una próxima etapa. Por ahora, puedes explorar el inicio de Teamval.</string>
+    <string name="upcoming_description">La sección %1$s estará disponible en una próxima etapa. Por ahora, puedes explorar el inicio de TeamVal.</string>
     <string name="back_to_home">Volver al inicio</string>
     <string name="home_footer">Este es solo el comienzo.</string>
 </resources>

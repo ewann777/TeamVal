@@ -85,6 +85,7 @@ fun ProfileStickerBadge(sticker: ProfileSticker, modifier: Modifier = Modifier) 
         modifier = modifier,
         shape = RoundedCornerShape(50),
         color = Color.White.copy(alpha = 0.12f),
+        contentColor = Color.White,
         border = BorderStroke(1.dp, accent.copy(alpha = 0.55f))
     ) {
         Row(

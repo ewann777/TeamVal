@@ -2,6 +2,11 @@ package com.example.teamval.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val ValorantRed = Color(0xFFFF4655)
+val CarbonBlue = Color(0xFF0F1923)
+val Ivory = Color(0xFFECE8E1)
+val SupportBlueGray = Color(0xFF5A6672)
+
 val Lavender = Color(0xFFC4B5FD)
 val OnLavender = Color(0xFF261B40)
 val LavenderContainer = Color(0xFF39304F)
